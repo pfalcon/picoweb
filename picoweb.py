@@ -1,9 +1,9 @@
 import re
 import asyncio_micro as asyncio
-import utemplate
+import utemplate.source
 
 
-template_loader = utemplate.Loader(".")
+template_loader = utemplate.source.Loader(".")
 
 def render(writer, tmpl_name, args=()):
     tmpl = template_loader.load(tmpl_name)
