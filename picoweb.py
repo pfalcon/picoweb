@@ -10,6 +10,11 @@ def render(writer, tmpl_name, args=()):
     for s in tmpl(*args):
         yield from writer.awrite(s)
 
+def start_html(writer):
+    yield from writer.awrite("HTTP/1.0 200 OK\r\n")
+    yield from writer.awrite("Content-Type: text/html\r\n")
+    yield from writer.awrite("\r\n")
+
 
 class HTTPRequest:
 
