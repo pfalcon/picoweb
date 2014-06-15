@@ -10,9 +10,21 @@ def render(writer, tmpl_name, args=()):
     for s in tmpl(*args):
         yield from writer.awrite(s)
 
-def start_html(writer):
+def sendfd(writer, f):
+    while True:
+        buf = f.read(512)
+        if not buf:
+            break
+        yield from writer.awrite(buf)
+
+def sendfile(writer, fname, content_type="text/plain"):
+    yield from start_response(writer, content_type)
+    with open(fname) as f:
+        yield from sendfd(writer, f)
+
+def start_response(writer, content_type="text/html"):
     yield from writer.awrite("HTTP/1.0 200 OK\r\n")
-    yield from writer.awrite("Content-Type: text/html\r\n")
+    yield from writer.awrite("Content-Type: %s\r\n" % content_type)
     yield from writer.awrite("\r\n")
 
 
