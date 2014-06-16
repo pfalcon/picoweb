@@ -35,6 +35,13 @@ class HTTPRequest:
         self.path = path
         self.headers = headers
 
+    def read_form_data(self):
+        size = int(self.headers["Content-Length"])
+        data = yield from self.reader.read(size)
+        import urllib.parse
+        form = urllib.parse.parse_qs(data)
+        self.form = form
+
 
 class WebApp:
 
@@ -64,6 +71,7 @@ class WebApp:
                 found = True
                 break
         if found:
+            req.reader = reader
             yield from handler(writer, req)
         print("After response write")
         yield from writer.close()
