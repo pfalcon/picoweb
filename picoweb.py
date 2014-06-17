@@ -27,6 +27,11 @@ def sendfile(writer, fname, content_type="text/plain"):
     with open(fname) as f:
         yield from sendfd(writer, f)
 
+def jsonify(writer, dict):
+    import json
+    yield from start_response(writer, "application/json")
+    yield from writer.awrite(json.dumps(dict))
+
 def start_response(writer, content_type="text/html"):
     yield from writer.awrite("HTTP/1.0 200 OK\r\n")
     yield from writer.awrite("Content-Type: %s\r\n" % content_type)
