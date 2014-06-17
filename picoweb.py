@@ -10,6 +10,11 @@ def render(writer, tmpl_name, args=()):
     for s in tmpl(*args):
         yield from writer.awrite(s)
 
+def render_str(tmpl_name, args=()):
+    #TODO: bloat
+    tmpl = template_loader.load(tmpl_name)
+    return ''.join(tmpl(*args))
+
 def sendfd(writer, f):
     while True:
         buf = f.read(512)
