@@ -2,6 +2,8 @@ import re
 import asyncio_micro as asyncio
 import utemplate.source
 
+from .utils import parse_qs
+
 
 template_loader = utemplate.source.Loader(".")
 
@@ -48,8 +50,7 @@ class HTTPRequest:
     def read_form_data(self):
         size = int(self.headers["Content-Length"])
         data = yield from self.reader.read(size)
-        import urllib.parse
-        form = urllib.parse.parse_qs(data)
+        form = parse_qs(data)
         self.form = form
 
 
