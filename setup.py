@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 setup(name='picoweb',
-      version='0.1',
+      version='0.3',
       description="""A very lightweight, memory-efficient async web framework
 for MicroPython.org and its asyncio_micro.""",
       url='https://github.com/pfalcon/picoweb',
