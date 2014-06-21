@@ -77,9 +77,12 @@ class WebApp:
             if path == pattern:
                 found = True
                 break
-            elif not isinstance(pattern, str) and pattern.search(path):
-                found = True
-                break
+            elif not isinstance(pattern, str):
+                m = pattern.search(path)
+                if m:
+                    req.url_match = m
+                    found = True
+                    break
         if found:
             req.reader = reader
             yield from handler(writer, req)
