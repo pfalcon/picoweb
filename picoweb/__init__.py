@@ -108,7 +108,13 @@ class WebApp:
         # because it's alleged bloat.
         self.url_map.append((url, func, kwargs))
 
+    def init(self):
+        """Initialize a web application. This is for overriding by subclasses.
+        This is good place to connect to/initialize a database, for example."""
+        pass
+
     def run(self, host="127.0.0.1", port=8081, debug=False):
+        self.init()
         loop = asyncio.get_event_loop()
         if debug:
             print("* Running on http://%s:%s/" % (host, port))
