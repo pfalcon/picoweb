@@ -34,8 +34,8 @@ def jsonify(writer, dict):
     yield from start_response(writer, "application/json")
     yield from writer.awrite(json.dumps(dict))
 
-def start_response(writer, content_type="text/html"):
-    yield from writer.awrite("HTTP/1.0 200 OK\r\n")
+def start_response(writer, content_type="text/html", status="200"):
+    yield from writer.awrite("HTTP/1.0 %s NA\r\n" % status)
     yield from writer.awrite("Content-Type: %s\r\n" % content_type)
     yield from writer.awrite("\r\n")
 
@@ -87,6 +87,9 @@ class WebApp:
         if found:
             req.reader = reader
             yield from handler(writer, req)
+        else:
+            yield from start_response(writer, status="404")
+            yield from writer.awrite("404\r\n")
         print("After response write")
         yield from writer.close()
         print("Finished processing request")
