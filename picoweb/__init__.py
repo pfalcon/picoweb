@@ -56,8 +56,11 @@ class HTTPRequest:
 
 class WebApp:
 
-    def __init__(self, routes):
-        self.url_map = routes
+    def __init__(self, routes=None):
+        if routes:
+            self.url_map = routes
+        else:
+            self.url_map = []
 
     def _handle(self, reader, writer):
         print("================")
