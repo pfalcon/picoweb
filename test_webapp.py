@@ -17,7 +17,7 @@ ROUTES = [
     ("/", index),
     ("/squares", squares),
     ("/file", lambda wr, req: (yield from picoweb.sendfile(wr, "picoweb.py"))),
-    (re.compile("^/"), index),
+    (re.compile("^/sq"), index),
 ]
 
 
