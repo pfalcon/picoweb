@@ -74,7 +74,7 @@ class WebApp:
         print((method, path, proto), headers)
         req = HTTPRequest(method, path, headers)
         found = False
-        for pattern, handler in self.routes:
+        for pattern, handler, *extra in self.routes:
             if path == pattern:
                 found = True
                 break
@@ -90,6 +90,12 @@ class WebApp:
         print("After response write")
         yield from writer.close()
         print("Finished processing request")
+
+    def route(self, url, **kwargs):
+        def _route(f):
+            self.routes.append((url, f, kwargs))
+            return f
+        return _route
 
     def run(self, host="127.0.0.1", port=8081, debug=False):
         loop = asyncio.get_event_loop()
