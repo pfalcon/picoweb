@@ -97,6 +97,11 @@ class WebApp:
             return f
         return _route
 
+    def add_url_rule(self, url, func, **kwargs):
+        # Note: this method skips Flask's "endpoint" argument,
+        # because it's alleged bloat.
+        self.url_map.append((url, func, kwargs))
+
     def run(self, host="127.0.0.1", port=8081, debug=False):
         loop = asyncio.get_event_loop()
         if debug:
