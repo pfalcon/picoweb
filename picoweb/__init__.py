@@ -93,6 +93,8 @@ class WebApp:
 
     def run(self, debug=False):
         loop = asyncio.get_event_loop()
+        if debug:
+            print("* Running on http://127.0.0.1:8081/")
         loop.call_soon(asyncio.start_server(self._handle, "127.0.0.1", 8081))
         loop.run_forever()
         loop.close()
