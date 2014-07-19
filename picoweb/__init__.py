@@ -60,8 +60,8 @@ class WebApp:
         self.url_map = routes
 
     def _handle(self, reader, writer):
-        print(reader, writer)
         print("================")
+        print(reader, writer)
         request_line = yield from reader.readline()
         method, path, proto = request_line.split()
         headers = {}
