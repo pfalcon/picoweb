@@ -61,6 +61,8 @@ class WebApp:
             self.url_map = routes
         else:
             self.url_map = []
+        self.mounts = []
+        self.inited = False
 
     def _handle(self, reader, writer):
         print("================")
@@ -75,9 +77,31 @@ class WebApp:
             k, v = l.split(":", 1)
             headers[k] = v.strip()
         print((method, path, proto), headers)
+
+        # Find which mounted subapp (if any) should handle this request
+        app = self
+        while True:
+            found = False
+            for subapp in app.mounts:
+                root = subapp.url
+                print(path, "vs", root)
+                if path[:len(root)] == root:
+                    app = subapp
+                    found = True
+                    path = path[len(root):]
+                    if not path or path[0] != "/":
+                        path = "/" + path
+                    break
+            if not found:
+                break
+
+        if not app.inited:
+            app.init()
+
         req = HTTPRequest(method, path, headers)
+
         found = False
-        for pattern, handler, *extra in self.url_map:
+        for pattern, handler, *extra in app.url_map:
             if path == pattern:
                 found = True
                 break
@@ -97,6 +121,17 @@ class WebApp:
         yield from writer.close()
         print("Finished processing request")
 
+    def mount(self, url, app):
+        "Mount a sub-app at the url of current app."
+        # Inspired by Bottle. It might seem that dispatching to
+        # subapps would rather be handled by normal routes, but
+        # arguably, that's less efficient. Taking into account
+        # that paradigmatically there's difference between handing
+        # an action and delegating responisibilities to another
+        # app, Bottle's way was followed.
+        app.url = url
+        self.mounts.append(app)
+
     def route(self, url, **kwargs):
         def _route(f):
             self.url_map.append((url, f, kwargs))
@@ -111,10 +146,13 @@ class WebApp:
     def init(self):
         """Initialize a web application. This is for overriding by subclasses.
         This is good place to connect to/initialize a database, for example."""
-        pass
+        self.inited = True
 
-    def run(self, host="127.0.0.1", port=8081, debug=False):
+    def run(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False):
         self.init()
+        if not lazy_init:
+            for app in self.mounts:
+                app.init()
         loop = asyncio.get_event_loop()
         if debug:
             print("* Running on http://%s:%s/" % (host, port))
