@@ -57,7 +57,7 @@ class HTTPRequest:
 class WebApp:
 
     def __init__(self, routes):
-        self.routes = routes
+        self.url_map = routes
 
     def _handle(self, reader, writer):
         print(reader, writer)
@@ -74,7 +74,7 @@ class WebApp:
         print((method, path, proto), headers)
         req = HTTPRequest(method, path, headers)
         found = False
-        for pattern, handler, *extra in self.routes:
+        for pattern, handler, *extra in self.url_map:
             if path == pattern:
                 found = True
                 break
@@ -93,7 +93,7 @@ class WebApp:
 
     def route(self, url, **kwargs):
         def _route(f):
-            self.routes.append((url, f, kwargs))
+            self.url_map.append((url, f, kwargs))
             return f
         return _route
 
