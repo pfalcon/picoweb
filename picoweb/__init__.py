@@ -91,7 +91,7 @@ class WebApp:
         yield from writer.close()
         print("Finished processing request")
 
-    def serve(self):
+    def run(self, debug=False):
         loop = asyncio.get_event_loop()
         loop.call_soon(asyncio.start_server(self._handle, "127.0.0.1", 8081))
         loop.run_forever()
