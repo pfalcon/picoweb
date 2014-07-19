@@ -1,0 +1,33 @@
+Intro
+=====
+picoweb is "micro" web micro-framework (thus, "pico-framework") for radically
+unbloated web applications using radically unbloated Python implementation,
+MicroPython, https://github.com/micropython/micropython .
+
+Features:
+
+* Asynchronous from the start, using unbloated asyncio-like library
+(asyncion_micro).
+* Modest memory usage (I would say radically small memory usage, but
+so far, trivial web app requires 64K (yes, kilobytes) of heap, which
+is much more than I expected).
+* Has API affinity with well-known Python web micro-framework(s).
+
+
+Details
+=======
+picoweb depends on:
+
+* asyncio_micro for asynchronous networking
+https://github.com/micropython/micropython-lib/tree/asyncio
+* utemplate, for templating
+https://github.com/pfalcon/utemplate
+* uorm, for database access (optional, no direct dependency)
+https://github.com/pfalcon/uorm
+
+picoweb roughly follows API of Flask http://flask.pocoo.org . Note that this
+does not mean "compatibility" with Flask - architecture is quite different,
+so there is no talk of that. However, porting efforts are saved from
+repeatitive search & replace trials, in other words, when methods do similar
+things, they are likely named the same (but they may take slightly different
+parameters, return different values, and behave slightly differently).
