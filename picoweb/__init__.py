@@ -113,7 +113,7 @@ class WebApp:
             req.path = path
             req.headers = headers
             req.reader = reader
-            yield from handler(writer, req)
+            yield from handler(req, writer)
         else:
             yield from start_response(writer, status="404")
             yield from writer.awrite("404\r\n")

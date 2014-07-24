@@ -2,21 +2,21 @@ import re
 import picoweb
 
 
-def index(writer, req):
-    yield from writer.awrite("HTTP/1.0 200 OK\r\n")
-    yield from writer.awrite("Content-Type: text/html\r\n")
-    yield from writer.awrite("\r\n")
-    yield from writer.awrite("I can show you a table of <a href='squares'>squares</a>.")
+def index(req, resp):
+    yield from resp.awrite("HTTP/1.0 200 OK\r\n")
+    yield from resp.awrite("Content-Type: text/html\r\n")
+    yield from resp.awrite("\r\n")
+    yield from resp.awrite("I can show you a table of <a href='squares'>squares</a>.")
 
-def squares(writer, req):
-    yield from picoweb.start_response(writer)
-    yield from picoweb.render(writer, "squares", (req,))
+def squares(req, resp):
+    yield from picoweb.start_response(resp)
+    yield from picoweb.render(resp, "squares", (req,))
 
 
 ROUTES = [
     ("/", index),
     ("/squares", squares),
-    ("/file", lambda wr, req: (yield from picoweb.sendfile(wr, "picoweb.py"))),
+    ("/file", lambda req, resp: (yield from picoweb.sendfile(resp, "picoweb.py"))),
     (re.compile("^/sq"), index),
 ]
 
