@@ -42,10 +42,8 @@ def start_response(writer, content_type="text/html", status="200"):
 
 class HTTPRequest:
 
-    def __init__(self, method, path, headers):
-        self.method = method
-        self.path = path
-        self.headers = headers
+    def __init__(self):
+        pass
 
     def read_form_data(self):
         size = int(self.headers["Content-Length"])
@@ -65,18 +63,19 @@ class WebApp:
         self.inited = False
 
     def _handle(self, reader, writer):
-        print("================")
-        print(reader, writer)
         request_line = yield from reader.readline()
         method, path, proto = request_line.split()
         headers = {}
+        req = HTTPRequest()
         while True:
             l = yield from reader.readline()
             if l == "\r\n":
                 break
             k, v = l.split(":", 1)
             headers[k] = v.strip()
-        print((method, path, proto), headers)
+        print("================")
+        print(req, writer)
+        print(req, (method, path, proto), headers)
 
         # Find which mounted subapp (if any) should handle this request
         app = self
@@ -98,8 +97,6 @@ class WebApp:
         if not app.inited:
             app.init()
 
-        req = HTTPRequest(method, path, headers)
-
         found = False
         for pattern, handler, *extra in app.url_map:
             if path == pattern:
@@ -112,14 +109,17 @@ class WebApp:
                     found = True
                     break
         if found:
+            req.method = method
+            req.path = path
+            req.headers = headers
             req.reader = reader
             yield from handler(writer, req)
         else:
             yield from start_response(writer, status="404")
             yield from writer.awrite("404\r\n")
-        print("After response write")
+        print(req, "After response write")
         yield from writer.close()
-        print("Finished processing request")
+        print(req, "Finished processing request")
 
     def mount(self, url, app):
         "Mount a sub-app at the url of current app."
