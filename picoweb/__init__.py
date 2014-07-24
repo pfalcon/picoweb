@@ -54,11 +54,14 @@ class HTTPRequest:
 
 class WebApp:
 
-    def __init__(self, routes=None):
+    def __init__(self, routes=None, static="static"):
         if routes:
             self.url_map = routes
         else:
             self.url_map = []
+        if static:
+            self.url_map.append((re.compile("^/static(/.+)"),
+                lambda req, resp: (yield from sendfile(resp, static + req.url_match.group(1)))))
         self.mounts = []
         self.inited = False
 
