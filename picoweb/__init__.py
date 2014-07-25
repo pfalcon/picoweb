@@ -5,17 +5,6 @@ import utemplate.source
 from .utils import parse_qs
 
 
-template_loader = utemplate.source.Loader(".")
-
-def render(writer, tmpl_name, args=()):
-    tmpl = template_loader.load(tmpl_name)
-    for s in tmpl(*args):
-        yield from writer.awrite(s)
-
-def render_str(tmpl_name, args=()):
-    #TODO: bloat
-    tmpl = template_loader.load(tmpl_name)
-    return ''.join(tmpl(*args))
 
 def sendfd(writer, f):
     while True:
@@ -64,6 +53,7 @@ class WebApp:
                 lambda req, resp: (yield from sendfile(resp, static + req.url_match.group(1)))))
         self.mounts = []
         self.inited = False
+        self.template_loader = utemplate.source.Loader("templates")
 
     def _handle(self, reader, writer):
         request_line = yield from reader.readline()
@@ -145,6 +135,16 @@ class WebApp:
         # Note: this method skips Flask's "endpoint" argument,
         # because it's alleged bloat.
         self.url_map.append((url, func, kwargs))
+
+    def render_template(self, writer, tmpl_name, args=()):
+        tmpl = self.template_loader.load(tmpl_name)
+        for s in tmpl(*args):
+            yield from writer.awrite(s)
+
+    def render_str(self, tmpl_name, args=()):
+        #TODO: bloat
+        tmpl = self.template_loader.load(tmpl_name)
+        return ''.join(tmpl(*args))
 
     def init(self):
         """Initialize a web application. This is for overriding by subclasses.
