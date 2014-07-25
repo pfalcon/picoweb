@@ -12,7 +12,7 @@ def index(req, resp):
 @app.route("/squares")
 def squares(req, resp):
     yield from picoweb.start_response(resp)
-    yield from picoweb.render(resp, "squares", (req,))
+    yield from app.render_template(resp, "squares.tpl", (req,))
 
 
 import logging
