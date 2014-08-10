@@ -57,11 +57,15 @@ class WebApp:
 
     def _handle(self, reader, writer):
         request_line = yield from reader.readline()
+        # TODO: bytes vs str
+        request_line = request_line.decode()
         method, path, proto = request_line.split()
         headers = {}
         req = HTTPRequest()
         while True:
             l = yield from reader.readline()
+            # TODO: bytes vs str
+            l = l.decode()
             if l == "\r\n":
                 break
             k, v = l.split(":", 1)

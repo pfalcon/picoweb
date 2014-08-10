@@ -11,7 +11,8 @@ def unquote_plus(s):
 
 def parse_qs(s):
     res = {}
-    pairs = s.split("&")
+    # TODO: bytes vs str
+    pairs = s.decode().split("&")
     for p in pairs:
         k, v = p.split("=", 1)
         k, v = unquote_plus(k), unquote_plus(v)
