@@ -21,7 +21,7 @@ Details
 =======
 picoweb depends on:
 
-* asyncio_micro for asynchronous networking
+* uasyncio for asynchronous networking
 https://github.com/micropython/micropython-lib/tree/asyncio
 * utemplate, for templating
 https://github.com/pfalcon/utemplate

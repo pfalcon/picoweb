@@ -1,5 +1,5 @@
 import re
-import asyncio_micro as asyncio
+import uasyncio as asyncio
 import utemplate.source
 
 from .utils import parse_qs
