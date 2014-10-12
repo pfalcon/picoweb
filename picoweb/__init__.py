@@ -19,9 +19,9 @@ def sendfile(writer, fname, content_type="text/plain"):
         yield from sendfd(writer, f)
 
 def jsonify(writer, dict):
-    import json
+    import ujson
     yield from start_response(writer, "application/json")
-    yield from writer.awrite(json.dumps(dict))
+    yield from writer.awrite(ujson.dumps(dict))
 
 def start_response(writer, content_type="text/html", status="200"):
     yield from writer.awrite("HTTP/1.0 %s NA\r\n" % status)
