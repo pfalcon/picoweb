@@ -91,9 +91,11 @@ class WebApp:
             if not found:
                 break
 
+        # We initialize apps on demand, when they really get requests
         if not app.inited:
             app.init()
 
+        # Find handler to serve this request in app's url_map
         found = False
         for pattern, handler, *extra in app.url_map:
             if path == pattern:
