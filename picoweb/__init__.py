@@ -100,7 +100,12 @@ class WebApp:
                 found = True
                 break
             elif not isinstance(pattern, str):
-                m = pattern.search(path)
+                # Anything which is non-string assumed to be a ducktype
+                # pattern matcher, whose .match() method is called. (Note:
+                # Django uses .search() instead, but .match() is more
+                # efficient and we're not exactly compatible with Django
+                # URL matching anyway.)
+                m = pattern.match(path)
                 if m:
                     req.url_match = m
                     found = True
