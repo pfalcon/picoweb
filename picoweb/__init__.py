@@ -40,6 +40,10 @@ class HTTPRequest:
         form = parse_qs(data.decode())
         self.form = form
 
+    def parse_qs(self):
+        form = parse_qs(self.qs)
+        self.form = form
+
 
 class WebApp:
 
@@ -60,6 +64,11 @@ class WebApp:
         # TODO: bytes vs str
         request_line = request_line.decode()
         method, path, proto = request_line.split()
+        path = path.split("?", 1)
+        qs = ""
+        if len(path) > 1:
+            qs = path[1]
+        path = path[0]
         headers = {}
         req = HTTPRequest()
         while True:
@@ -72,7 +81,7 @@ class WebApp:
             headers[k] = v.strip()
         print("================")
         print(req, writer)
-        print(req, (method, path, proto), headers)
+        print(req, (method, path, qs, proto), headers)
 
         # Find which mounted subapp (if any) should handle this request
         app = self
@@ -115,6 +124,7 @@ class WebApp:
         if found:
             req.method = method
             req.path = path
+            req.qs = qs
             req.headers = headers
             req.reader = reader
             yield from handler(req, writer)
