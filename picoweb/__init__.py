@@ -1,4 +1,5 @@
 import re
+import errno
 import uasyncio as asyncio
 import utemplate.source
 
@@ -24,9 +25,15 @@ def sendfd(writer, f):
 def sendfile(writer, fname, content_type=None):
     if not content_type:
         content_type = get_mime_type(fname)
-    yield from start_response(writer, content_type)
-    with open(fname, "rb") as f:
-        yield from sendfd(writer, f)
+    try:
+        with open(fname, "rb") as f:
+            yield from start_response(writer, content_type)
+            yield from sendfd(writer, f)
+    except OSError as e:
+        if e.args[0] == errno.ENOENT:
+            yield from start_response(writer, "text/plain", "404")
+        else:
+            raise
 
 def jsonify(writer, dict):
     import ujson
