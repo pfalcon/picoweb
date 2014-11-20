@@ -5,6 +5,14 @@ import utemplate.source
 from .utils import parse_qs
 
 
+def get_mime_type(fname):
+    # Provide minimal detection if important file
+    # types to keep browsers happy
+    if fname.endswith(".html"):
+        return "text/html"
+    if fname.endswith(".css"):
+        return "text/css"
+    return "text/plain"
 
 def sendfd(writer, f):
     while True:
@@ -13,7 +21,9 @@ def sendfd(writer, f):
             break
         yield from writer.awrite(buf)
 
-def sendfile(writer, fname, content_type="text/plain"):
+def sendfile(writer, fname, content_type=None):
+    if not content_type:
+        content_type = get_mime_type(fname)
     yield from start_response(writer, content_type)
     with open(fname, "rb") as f:
         yield from sendfd(writer, f)
