@@ -15,7 +15,7 @@ def sendfd(writer, f):
 
 def sendfile(writer, fname, content_type="text/plain"):
     yield from start_response(writer, content_type)
-    with open(fname) as f:
+    with open(fname, "rb") as f:
         yield from sendfd(writer, f)
 
 def jsonify(writer, dict):
