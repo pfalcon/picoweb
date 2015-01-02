@@ -1,3 +1,4 @@
+import time
 import re
 import errno
 import uasyncio as asyncio
@@ -78,16 +79,17 @@ class WebApp:
 
     def _handle(self, reader, writer):
         request_line = yield from reader.readline()
+        req = HTTPRequest()
         # TODO: bytes vs str
         request_line = request_line.decode()
         method, path, proto = request_line.split()
+        print('%.3f %s %s "%s %s"' % (time.time(), req, writer, method, path))
         path = path.split("?", 1)
         qs = ""
         if len(path) > 1:
             qs = path[1]
         path = path[0]
         headers = {}
-        req = HTTPRequest()
         while True:
             l = yield from reader.readline()
             # TODO: bytes vs str
