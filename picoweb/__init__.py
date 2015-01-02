@@ -201,6 +201,6 @@ class WebApp:
         loop = asyncio.get_event_loop()
         if debug:
             print("* Running on http://%s:%s/" % (host, port))
-        loop.call_soon(asyncio.start_server(self._handle, host, port))
+        loop.create_task(asyncio.start_server(self._handle, host, port))
         loop.run_forever()
         loop.close()
