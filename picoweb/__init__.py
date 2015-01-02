@@ -96,9 +96,9 @@ class WebApp:
                 break
             k, v = l.split(":", 1)
             headers[k] = v.strip()
-        print("================")
-        print(req, writer)
-        print(req, (method, path, qs, proto), headers)
+#        print("================")
+#        print(req, writer)
+#        print(req, (method, path, qs, proto), headers)
 
         # Find which mounted subapp (if any) should handle this request
         app = self
@@ -148,9 +148,10 @@ class WebApp:
         else:
             yield from start_response(writer, status="404")
             yield from writer.awrite("404\r\n")
-        print(req, "After response write")
+        #print(req, "After response write")
         yield from writer.close()
-        print(req, "Finished processing request")
+        if __debug__ and self.debug > 1:
+            print(req, "Finished processing request")
 
     def mount(self, url, app):
         "Mount a sub-app at the url of current app."
@@ -190,6 +191,7 @@ class WebApp:
         self.inited = True
 
     def run(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False):
+        self.debug = int(debug)
         self.init()
         if not lazy_init:
             for app in self.mounts:
