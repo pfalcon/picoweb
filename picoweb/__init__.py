@@ -151,7 +151,7 @@ class WebApp:
             yield from start_response(writer, status="404")
             yield from writer.awrite("404\r\n")
         #print(req, "After response write")
-        yield from writer.close()
+        yield from writer.aclose()
         if __debug__ and self.debug > 1:
             print(req, "Finished processing request")
 
