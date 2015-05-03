@@ -79,6 +79,10 @@ class WebApp:
 
     def _handle(self, reader, writer):
         request_line = yield from reader.readline()
+        if request_line == b"":
+            print(reader, "EOF on request start")
+            yield from writer.aclose()
+            return
         req = HTTPRequest()
         # TODO: bytes vs str
         request_line = request_line.decode()
