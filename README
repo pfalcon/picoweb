@@ -67,3 +67,14 @@ provides function parse_qs(), which always returns array of values (based
 on the fact that any request variable may have more than one value). Given
 2 choices, picoweb follows the interface of the standard library, instead of
 providing extra wrapper class on top of it.
+
+
+Running under CPython
+=====================
+
+At least CPython 3.4.2 is required (for asyncio loop.create_task() support).
+To run under CPython, uasyncio compatibility module for CPython is required
+(micropython-cpython-uasyncio). This and other dependencies can be installed
+using requirements-cpython.txt:
+
+    pip install -r requirements-cpython.txt
