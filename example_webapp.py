@@ -26,5 +26,4 @@ logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(level=logging.DEBUG)
 
 app = picoweb.WebApp(ROUTES)
-mem_info()
 app.run(debug=True)
