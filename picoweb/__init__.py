@@ -2,7 +2,6 @@ import time
 import re
 import errno
 import uasyncio as asyncio
-import utemplate.source
 
 from .utils import parse_qs
 
@@ -75,7 +74,8 @@ class WebApp:
                 lambda req, resp: (yield from sendfile(resp, static + req.url_match.group(1)))))
         self.mounts = []
         self.inited = False
-        self.template_loader = utemplate.source.Loader("templates")
+        # Instantiated lazily
+        self.template_loader = None
 
     def _handle(self, reader, writer):
         request_line = yield from reader.readline()
@@ -181,14 +181,20 @@ class WebApp:
         # because it's alleged bloat.
         self.url_map.append((url, func, kwargs))
 
+    def _load_template(self, tmpl_name):
+        if self.template_loader is None:
+            import utemplate.source
+            self.template_loader = utemplate.source.Loader("templates")
+        return self.template_loader.load(tmpl_name)
+
     def render_template(self, writer, tmpl_name, args=()):
-        tmpl = self.template_loader.load(tmpl_name)
+        tmpl = self._load_template(tmpl_name)
         for s in tmpl(*args):
             yield from writer.awrite(s)
 
     def render_str(self, tmpl_name, args=()):
         #TODO: bloat
-        tmpl = self.template_loader.load(tmpl_name)
+        tmpl = self._load_template(tmpl_name)
         return ''.join(tmpl(*args))
 
     def init(self):
