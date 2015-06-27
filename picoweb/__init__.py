@@ -74,6 +74,8 @@ class WebApp:
         else:
             self.pkg = ""
         if static:
+            if self.pkg:
+                static = self.pkg + "/" + static
             self.url_map.append((re.compile("^/static(/.+)"),
                 lambda req, resp: (yield from sendfile(resp, static + req.url_match.group(1)))))
         self.mounts = []
