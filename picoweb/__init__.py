@@ -64,7 +64,7 @@ class HTTPRequest:
 
 class WebApp:
 
-    def __init__(self, routes=None, static="static"):
+    def __init__(self, pkg, routes=None, static="static"):
         if routes:
             self.url_map = routes
         else:
@@ -72,6 +72,7 @@ class WebApp:
         if static:
             self.url_map.append((re.compile("^/static(/.+)"),
                 lambda req, resp: (yield from sendfile(resp, static + req.url_match.group(1)))))
+        self.pkg = pkg
         self.mounts = []
         self.inited = False
         # Instantiated lazily
@@ -184,7 +185,7 @@ class WebApp:
     def _load_template(self, tmpl_name):
         if self.template_loader is None:
             import utemplate.source
-            self.template_loader = utemplate.source.Loader("templates")
+            self.template_loader = utemplate.source.Loader(self.pkg, "templates")
         return self.template_loader.load(tmpl_name)
 
     def render_template(self, writer, tmpl_name, args=()):
