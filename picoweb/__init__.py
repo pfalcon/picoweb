@@ -69,10 +69,13 @@ class WebApp:
             self.url_map = routes
         else:
             self.url_map = []
+        if pkg:
+            self.pkg = pkg.split(".", 1)[0]
+        else:
+            self.pkg = ""
         if static:
             self.url_map.append((re.compile("^/static(/.+)"),
                 lambda req, resp: (yield from sendfile(resp, static + req.url_match.group(1)))))
-        self.pkg = pkg
         self.mounts = []
         self.inited = False
         # Instantiated lazily
