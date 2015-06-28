@@ -75,7 +75,9 @@ class WebApp:
             self.pkg = ""
         if static:
             if self.pkg:
-                static = self.pkg + "/" + static
+                # TODO: Use pkg_resources.resource_stream()
+                p = __import__(self.pkg)
+                static = p.__path__ + "/" + static
             self.url_map.append((re.compile("^/static(/.+)"),
                 lambda req, resp: (yield from sendfile(resp, static + req.url_match.group(1)))))
         self.mounts = []
