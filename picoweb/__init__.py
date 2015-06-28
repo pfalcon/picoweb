@@ -15,7 +15,7 @@ def get_mime_type(fname):
         return "text/css"
     return "text/plain"
 
-def sendfd(writer, f):
+def sendstream(writer, f):
     while True:
         buf = f.read(512)
         if not buf:
@@ -28,7 +28,7 @@ def sendfile(writer, fname, content_type=None):
     try:
         with open(fname, "rb") as f:
             yield from start_response(writer, content_type)
-            yield from sendfd(writer, f)
+            yield from sendstream(writer, f)
     except OSError as e:
         if e.args[0] == errno.ENOENT:
             yield from start_response(writer, "text/plain", "404")
