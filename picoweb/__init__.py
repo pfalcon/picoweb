@@ -1,5 +1,5 @@
 import time
-import re
+import ure as re
 import errno
 import uasyncio as asyncio
 
