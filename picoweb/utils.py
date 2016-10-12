@@ -1,13 +1,9 @@
-import re
-
-
-qu_re = re.compile(r"%([0-9A-Fa-f]{2})")
-
 def unquote_plus(s):
-    def decode(s):
-        val = int(s.group(1), 16)
-        return chr(val)
-    return qu_re.sub(decode, s.replace("+", " "))
+    # TODO: optimize
+    s = s.replace("+", " ")
+    arr = s.split("%")
+    arr2 = [chr(int(x[:2], 16)) + x[2:] for x in arr[1:]]
+    return arr[0] + "".join(arr2)
 
 def parse_qs(s):
     res = {}
