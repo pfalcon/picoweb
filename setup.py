@@ -12,4 +12,4 @@ for MicroPython.org and its uasyncio module.""",
       packages=['picoweb'],
       # Note: no explicit dependency on 'utemplate', if a specific app uses
       # templates, it must depend on it.
-      install_requires=['micropython-uasyncio', 'micropython-time'])
+      install_requires=['micropython-uasyncio'])
