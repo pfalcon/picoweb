@@ -1,6 +1,6 @@
 import time
 import ure as re
-import errno
+import uerrno
 import uasyncio as asyncio
 
 from .utils import parse_qs
@@ -30,7 +30,7 @@ def sendfile(writer, fname, content_type=None):
             yield from start_response(writer, content_type)
             yield from sendstream(writer, f)
     except OSError as e:
-        if e.args[0] == errno.ENOENT:
+        if e.args[0] == uerrno.ENOENT:
             yield from start_response(writer, "text/plain", "404")
         else:
             raise
