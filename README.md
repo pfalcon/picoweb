@@ -72,6 +72,11 @@ providing extra wrapper class on top of it.
 Running under CPython
 =====================
 
+Initial versions on picoweb could run under CPython, but later it was
+further optimized for MicroPython, and ability to run under CPython
+regressed. It's still on TODO to fix it, instructions below tell how
+it used to work.
+
 At least CPython 3.4.2 is required (for asyncio loop.create_task() support).
 To run under CPython, uasyncio compatibility module for CPython is required
 (micropython-cpython-uasyncio). This and other dependencies can be installed
