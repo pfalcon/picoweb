@@ -25,5 +25,5 @@ import logging
 logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(level=logging.DEBUG)
 
-app = picoweb.WebApp(__name__, ROUTES)
+app = picoweb.WebApp(None, routes=ROUTES,gzip_ext='.gz')
 app.run(debug=True)

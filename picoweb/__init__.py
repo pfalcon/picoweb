@@ -13,6 +13,8 @@ def get_mime_type(fname):
         return "text/html"
     if fname.endswith(".css"):
         return "text/css"
+    if fname.endswith(".js"):
+        return "text/javascript"
     return "text/plain"
 
 def sendstream(writer, f):
@@ -22,26 +24,29 @@ def sendstream(writer, f):
             break
         yield from writer.awrite(buf)
 
-def sendfile(writer, fname, content_type=None):
+def sendfile(writer, fname, content_type=None,gzip_ext=None):
     if not content_type:
         content_type = get_mime_type(fname)
-    try:
-        with open(fname, "rb") as f:
-            yield from start_response(writer, content_type)
-            yield from sendstream(writer, f)
-    except OSError as e:
-        if e.args[0] == uerrno.ENOENT:
-            yield from start_response(writer, "text/plain", "404")
-        else:
-            raise
+    for compress in [True, False] if gzip_ext is not None else [False]:
+        try:
+            with open(fname + (gzip_ext if compress else ""), "rb") as f:
+                yield from start_response(writer, content_type, "200", compress)
+                yield from sendstream(writer, f)
+                return;
+        except OSError as e:
+            if e.args[0] != uerrno.ENOENT:
+                raise
+    yield from start_response(writer, "text/plain", "404", )
 
 def jsonify(writer, dict):
     import ujson
     yield from start_response(writer, "application/json")
     yield from writer.awrite(ujson.dumps(dict))
 
-def start_response(writer, content_type="text/html", status="200"):
+def start_response(writer, content_type="text/html", status="200", compressed=False):
     yield from writer.awrite("HTTP/1.0 %s NA\r\n" % status)
+    if compressed:
+    	yield from writer.awrite('Content-Encoding: gzip\r\n')
     yield from writer.awrite("Content-Type: %s\r\n" % content_type)
     yield from writer.awrite("\r\n")
 
@@ -64,7 +69,7 @@ class HTTPRequest:
 
 class WebApp:
 
-    def __init__(self, pkg, routes=None, static="static"):
+    def __init__(self, pkg, routes=None, static="static", gzip_ext=None):
         if routes:
             self.url_map = routes
         else:
@@ -79,7 +84,7 @@ class WebApp:
                 p = __import__(self.pkg)
                 static = p.__path__ + "/" + static
             self.url_map.append((re.compile("^/static(/.+)"),
-                lambda req, resp: (yield from sendfile(resp, static + req.url_match.group(1)))))
+                lambda req, resp: (yield from sendfile(resp, static + req.url_match.group(1), None, gzip_ext if ('gzip' in req.headers.get('Accept-Encoding', '').split(',')) else None ))))
         self.mounts = []
         self.inited = False
         # Instantiated lazily
