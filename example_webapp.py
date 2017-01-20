@@ -1,4 +1,4 @@
-import re
+import ure as re
 import picoweb
 
 
