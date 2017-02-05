@@ -1,33 +1,50 @@
 Intro
 =====
-picoweb is "micro" web micro-framework (thus, "pico-framework") for radically
-unbloated web applications using radically unbloated Python implementation,
-MicroPython, https://github.com/micropython/micropython .
+picoweb is a "micro" web micro-framework (thus, "pico-framework") for
+radically unbloated web applications using radically unbloated Python
+implementation, MicroPython, https://github.com/micropython/micropython.
 
 Features:
 
 * Asynchronous from the start, using unbloated asyncio-like library
-for MicroPython (uasyncio).
-* Modest memory usage (I would say radically small memory usage, but
-so far, trivial web app requires 64K (yes, kilobytes) of heap, which
-is much more than I expected).
+  for MicroPython ([uasyncio](https://github.com/micropython/micropython-lib/tree/master/uasyncio)).
+* Modest memory usage. I would say radically small memory usage, but
+  with the initial version, a trivial web app used to require 64K (yes,
+  kilobytes) of heap, which is much more than I expected. Optimizing
+  that on all the levels (MicroPython and up) is underway.
 * Has API affinity with well-known Python web micro-framework(s),
-thus it should be easy start if you have experience with that, and
-existing applications can be potentially ported, instead of requiring
-complete rewrite.
+  thus it should be easy start if you have experience with that, and
+  existing applications can be potentially ported, instead of requiring
+  complete rewrite.
+
+
+Requirements and optional modules
+=================================
+`picoweb` depends on `uasyncio` for asynchronous networking
+(https://github.com/micropython/micropython-lib/tree/asyncio).
+
+It is also indended to be used with `utemplate`
+(https://github.com/pfalcon/utemplate) for templating, but this is
+a "soft" dependency - picoweb offers convenience functions to use
+`utemplate` templates, but if you don't them or will handle templating
+in your app (e.g. with a different library), it won't be imported.
+
+For database access, there are following options (`picoweb` does
+not depend on any of them, up to your application to choose):
+
+* `uorm`, for Sqlite3 database access
+  https://github.com/pfalcon/uorm
+* `filedb`, for a simple database using files in a filesystem
+  https://github.com/pfalcon/filedb
+* `btree` builtin MicroPython module. It is expected that a simple
+  ORM will be developed for this module and it will be a recommended
+  way to do a database for `picoweb`, as this module allows portability
+  across all MicroPython targets, starting with very memory- and
+  storage-limited baremetal systems.
 
 
 Details
 =======
-picoweb depends on:
-
-* uasyncio for asynchronous networking
-https://github.com/micropython/micropython-lib/tree/asyncio
-* utemplate, for templating
-https://github.com/pfalcon/utemplate
-* uorm, for database access (optional, no direct dependency in framework)
-https://github.com/pfalcon/uorm
-
 picoweb API is roughly based on APIs of other well-known Python web
 frameworks. The strongest affinity is Flask, http://flask.pocoo.org, as
 arguably the most popular micro-framework. Some features are also based on
@@ -67,6 +84,26 @@ provides function parse_qs(), which always returns array of values (based
 on the fact that any request variable may have more than one value). Given
 2 choices, picoweb follows the interface of the standard library, instead of
 providing extra wrapper class on top of it.
+
+
+API reference
+=============
+The best API reference currently are examples (see below) and the `picoweb`
+source code itself. It's under 10K, so enjoy:
+https://github.com/pfalcon/picoweb/blob/master/picoweb/__init__.py
+
+Note that API is experimental and may undergo changes.
+
+
+Examples
+========
+* `example_webapp.py` - A simple webapp showing you how to generate a
+  complete HTTP response yourself, use `picoweb` convenience functions
+  for HTTP headers generation, and use of templates. Mapping from
+  URLs to webapp view functions ("web routes" or just "routes") is done
+  Django-style, using a centralized route list.
+* `example_webapp2.py` - like above, but uses `app.route()` decorator
+  for route specification, Flask-style.
 
 
 Running under CPython
