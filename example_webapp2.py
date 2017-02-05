@@ -1,4 +1,7 @@
-# This is (almost) the same as test_webapp.py, but uses app.route().
+#
+# This is a picoweb example showing a web page route
+# specification using view decorators (Flask style).
+#
 import picoweb
 
 
