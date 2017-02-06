@@ -42,8 +42,9 @@ def jsonify(writer, dict):
 
 def start_response(writer, content_type="text/html", status="200"):
     yield from writer.awrite("HTTP/1.0 %s NA\r\n" % status)
-    yield from writer.awrite("Content-Type: %s\r\n" % content_type)
-    yield from writer.awrite("\r\n")
+    yield from writer.awrite("Content-Type: ")
+    yield from writer.awrite(content_type)
+    yield from writer.awrite("\r\n\r\n")
 
 
 class HTTPRequest:
