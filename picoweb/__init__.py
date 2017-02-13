@@ -7,7 +7,7 @@ from .utils import parse_qs
 
 
 def get_mime_type(fname):
-    # Provide minimal detection if important file
+    # Provide minimal detection of important file
     # types to keep browsers happy
     if fname.endswith(".html"):
         return "text/html"
