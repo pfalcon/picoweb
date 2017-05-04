@@ -3,7 +3,7 @@ import optimize_upip
 
 
 setup(name='picoweb',
-      version='1.0',
+      version='1.0.1',
       description="""A very lightweight, memory-efficient async web framework
 for MicroPython.org and its uasyncio module.""",
       url='https://github.com/pfalcon/picoweb',
