@@ -46,6 +46,10 @@ def start_response(writer, content_type="text/html", status="200"):
     yield from writer.awrite(content_type)
     yield from writer.awrite("\r\n\r\n")
 
+def http_error(writer, status):
+    yield from start_response(writer, status=status)
+    yield from writer.awrite(status)
+
 
 class HTTPRequest:
 
