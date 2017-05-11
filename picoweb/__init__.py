@@ -1,4 +1,5 @@
 import utime
+import uio
 import ure as re
 import uerrno
 import uasyncio as asyncio
@@ -22,18 +23,6 @@ def sendstream(writer, f):
             break
         yield from writer.awrite(buf)
 
-def sendfile(writer, fname, content_type=None):
-    if not content_type:
-        content_type = get_mime_type(fname)
-    try:
-        with open(fname, "rb") as f:
-            yield from start_response(writer, content_type)
-            yield from sendstream(writer, f)
-    except OSError as e:
-        if e.args[0] == uerrno.ENOENT:
-            yield from start_response(writer, "text/plain", "404")
-        else:
-            raise
 
 def jsonify(writer, dict):
     import ujson
@@ -210,6 +199,19 @@ class WebApp:
         #TODO: bloat
         tmpl = self._load_template(tmpl_name)
         return ''.join(tmpl(*args))
+
+    def sendfile(self, writer, fname, content_type=None):
+        if not content_type:
+            content_type = get_mime_type(fname)
+        try:
+            with uio.resource_stream(self.pkg, fname) as f:
+                yield from start_response(writer, content_type)
+                yield from sendstream(writer, f)
+        except OSError as e:
+            if e.args[0] == uerrno.ENOENT:
+                yield from http_error(writer, "404")
+            else:
+                raise
 
     def init(self):
         """Initialize a web application. This is for overriding by subclasses.
