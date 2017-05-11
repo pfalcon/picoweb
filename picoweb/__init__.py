@@ -58,7 +58,7 @@ class HTTPRequest:
 
 class WebApp:
 
-    def __init__(self, pkg, routes=None, static="static"):
+    def __init__(self, pkg, routes=None, serve_static=True):
         if routes:
             self.url_map = routes
         else:
@@ -67,9 +67,8 @@ class WebApp:
             self.pkg = pkg.split(".", 1)[0]
         else:
             self.pkg = None
-        if static:
-            self.url_map.append((re.compile("^/static(/.+)"),
-                lambda req, resp: (yield from self.sendfile(resp, static + req.url_match.group(1)))))
+        if serve_static:
+            self.url_map.append((re.compile("^/(static/.+)"), self.handle_static))
         self.mounts = []
         self.inited = False
         # Instantiated lazily
@@ -207,6 +206,14 @@ class WebApp:
                 yield from http_error(writer, "404")
             else:
                 raise
+
+    def handle_static(self, req, resp):
+        path = req.url_match.group(1)
+        print(path)
+        if ".." in path:
+            yield from http_error(resp, "403")
+            return
+        yield from self.sendfile(resp, path)
 
     def init(self):
         """Initialize a web application. This is for overriding by subclasses.
