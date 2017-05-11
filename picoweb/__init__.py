@@ -63,18 +63,13 @@ class WebApp:
             self.url_map = routes
         else:
             self.url_map = []
-        if pkg:
+        if pkg and pkg != "__main__":
             self.pkg = pkg.split(".", 1)[0]
         else:
-            self.pkg = ""
+            self.pkg = None
         if static:
-            if self.pkg:
-                # TODO: Use pkg_resources.resource_stream()
-                p = __import__(self.pkg)
-                if hasattr(p, "__path__"):
-                    static = p.__path__ + "/" + static
             self.url_map.append((re.compile("^/static(/.+)"),
-                lambda req, resp: (yield from sendfile(resp, static + req.url_match.group(1)))))
+                lambda req, resp: (yield from self.sendfile(resp, static + req.url_match.group(1)))))
         self.mounts = []
         self.inited = False
         # Instantiated lazily
