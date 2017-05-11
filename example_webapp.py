@@ -12,7 +12,8 @@ def index(req, resp):
     yield from resp.awrite("HTTP/1.0 200 OK\r\n")
     yield from resp.awrite("Content-Type: text/html\r\n")
     yield from resp.awrite("\r\n")
-    yield from resp.awrite("I can show you a table of <a href='squares'>squares</a>.")
+    yield from resp.awrite("I can show you a table of <a href='squares'>squares</a>.<br/>")
+    yield from resp.awrite("Or my <a href='file'>source</a>.")
 
 
 def squares(req, resp):
@@ -32,7 +33,7 @@ ROUTES = [
     # You can specify exact URI string matches...
     ("/", index),
     ("/squares", squares),
-    ("/file", lambda req, resp: (yield from picoweb.sendfile(resp, "picoweb.py"))),
+    ("/file", lambda req, resp: (yield from app.sendfile(resp, "example_webapp.py"))),
     # ... or match using a regex, a match result available as req.url_match
     # for group extraction in your view.
     (re.compile("^/iam/(.+)"), hello),
