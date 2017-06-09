@@ -17,11 +17,12 @@ def get_mime_type(fname):
     return "text/plain"
 
 def sendstream(writer, f):
+    buf = bytearray(64)
     while True:
-        buf = f.read(512)
-        if not buf:
+        l = f.readinto(buf)
+        if not l:
             break
-        yield from writer.awrite(buf)
+        yield from writer.awrite(buf, 0, l)
 
 
 def jsonify(writer, dict):
