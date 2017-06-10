@@ -1,3 +1,4 @@
+import micropython
 import utime
 import uio
 import ure as re
@@ -76,6 +77,8 @@ class WebApp:
         self.template_loader = None
 
     def _handle(self, reader, writer):
+        if self.debug:
+            micropython.mem_info()
         request_line = yield from reader.readline()
         if request_line == b"":
             print(reader, "EOF on request start")
