@@ -1,3 +1,4 @@
+import gc
 import micropython
 import utime
 import uio
@@ -225,6 +226,7 @@ class WebApp:
         self.inited = True
 
     def run(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False):
+        gc.collect()
         self.debug = int(debug)
         self.init()
         if not lazy_init:
