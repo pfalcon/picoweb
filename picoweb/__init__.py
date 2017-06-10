@@ -5,6 +5,7 @@ import uio
 import ure as re
 import uerrno
 import uasyncio as asyncio
+import pkg_resources
 
 from .utils import parse_qs
 
@@ -203,7 +204,7 @@ class WebApp:
         if not content_type:
             content_type = get_mime_type(fname)
         try:
-            with uio.resource_stream(self.pkg, fname) as f:
+            with pkg_resources.resource_stream(self.pkg, fname) as f:
                 yield from start_response(writer, content_type)
                 yield from sendstream(writer, f)
         except OSError as e:
