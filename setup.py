@@ -3,7 +3,7 @@ import optimize_upip
 
 
 setup(name='picoweb',
-      version='1.2',
+      version='1.2.1',
       description="""A very lightweight, memory-efficient async web framework
 for MicroPython.org and its uasyncio module.""",
       url='https://github.com/pfalcon/picoweb',
@@ -14,4 +14,4 @@ for MicroPython.org and its uasyncio module.""",
       packages=['picoweb'],
       # Note: no explicit dependency on 'utemplate', if a specific app uses
       # templates, it must depend on it.
-      install_requires=['micropython-uasyncio'])
+      install_requires=['micropython-uasyncio', 'micropython-pkg_resources'])
