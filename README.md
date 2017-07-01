@@ -8,10 +8,11 @@ Features:
 
 * Asynchronous from the start, using unbloated asyncio-like library
   for MicroPython ([uasyncio](https://github.com/micropython/micropython-lib/tree/master/uasyncio)).
-* Modest memory usage. I would say radically small memory usage, but
-  with the initial version, a trivial web app used to require 64K (yes,
-  kilobytes) of heap, which is much more than I expected. Optimizing
-  that on all the levels (MicroPython and up) is underway.
+* Small memory usage. Initial version required about 64K of heap for
+  a trivial web app, and since then, it was optimized to allow run
+  more or less realistic web app in ~36K of heap. More optimizations
+  on all the levels (MicroPython and up) are planned (but may lead to
+  API changes).
 * Has API affinity with well-known Python web micro-framework(s),
   thus it should be easy start if you have experience with that, and
   existing applications can be potentially ported, instead of requiring
@@ -32,15 +33,14 @@ in your app (e.g. with a different library), it won't be imported.
 For database access, there are following options (`picoweb` does
 not depend on any of them, up to your application to choose):
 
-* `uorm`, for Sqlite3 database access
-  https://github.com/pfalcon/uorm
+* `btree` builtin MicroPython module using `btreedb` wrapper. This is
+  a recommended way to do a database storage for `picoweb`, as it allows
+  portability across all MicroPython targets, starting with very memory-
+  and storage-limited baremetal systems.
 * `filedb`, for a simple database using files in a filesystem
   https://github.com/pfalcon/filedb
-* `btree` builtin MicroPython module. It is expected that a simple
-  ORM will be developed for this module and it will be a recommended
-  way to do a database for `picoweb`, as this module allows portability
-  across all MicroPython targets, starting with very memory- and
-  storage-limited baremetal systems.
+* `uorm`, for Sqlite3 database access (works only with MicroPython
+  Unix port) https://github.com/pfalcon/uorm
 
 
 Details
@@ -102,8 +102,10 @@ Examples
   for HTTP headers generation, and use of templates. Mapping from
   URLs to webapp view functions ("web routes" or just "routes") is done
   Django-style, using a centralized route list.
-* `example_webapp2.py` - like above, but uses `app.route()` decorator
+* `example_webapp2.py` - Like above, but uses `app.route()` decorator
   for route specification, Flask-style.
+* [notes-pico](https://github.com/pfalcon/notes-pico) - More realistic
+  example webapp, ported from the Flask original.
 
 
 Running under CPython
