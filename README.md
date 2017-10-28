@@ -13,8 +13,8 @@ Features:
   more or less realistic web app in ~36K of heap. More optimizations
   on all the levels (MicroPython and up) are planned (but may lead to
   API changes).
-* Has API affinity with well-known Python web micro-framework(s),
-  thus it should be easy start if you have experience with that, and
+* Has API affinity with some well-known Python web micro-framework(s),
+  thus it should be an easy start if you have experience with them, and
   existing applications can be potentially ported, instead of requiring
   complete rewrite.
 
@@ -27,16 +27,21 @@ Requirements and optional modules
 It is also indended to be used with `utemplate`
 (https://github.com/pfalcon/utemplate) for templating, but this is
 a "soft" dependency - picoweb offers convenience functions to use
-`utemplate` templates, but if you don't them or will handle templating
-in your app (e.g. with a different library), it won't be imported.
+`utemplate` templates, but if you don't use them or will handle
+templating in your app (e.g. with a different library), it won't be
+imported.
 
 For database access, there are following options (`picoweb` does
 not depend on any of them, up to your application to choose):
 
-* `btree` builtin MicroPython module using `btreedb` wrapper. This is
-  a recommended way to do a database storage for `picoweb`, as it allows
-  portability across all MicroPython targets, starting with very memory-
-  and storage-limited baremetal systems.
+* [btree](http://docs.micropython.org/en/latest/unix/library/btree.html)
+  builtin MicroPython module. This is a recommended way to do a database
+  storage for `picoweb`, as it allows portability across all MicroPython
+  targets, starting with very memory- and storage-limited baremetal systems.
+* `btreedb` wrapper on top of `btree` builtin module. This may add some
+  overhead, but may allow to make an application portable between different
+  database backends (`filedb` and `uorm` below).
+  https://github.com/pfalcon/micropython-btreedb
 * `filedb`, for a simple database using files in a filesystem
   https://github.com/pfalcon/filedb
 * `uorm`, for Sqlite3 database access (works only with MicroPython
@@ -52,7 +57,7 @@ Bottle and Django. Note that this does not mean particular "compatibility"
 with Flask, Bottle, or Django: most existing web frameworks are synchronous
 (and threaded), while picoweb is async framework, so its architecture is
 quite different. However, there is an aim to save porting efforts from
-repeatitive search & replace trials, for example, when methods do similar
+repeatitive search & replace trials: for example, when methods do similar
 things, they are likely named the same (but they may take slightly different
 parameters, return different values, and behave slightly differently).
 
@@ -61,18 +66,18 @@ that the same code may handle multiple requests at the same time, but unlike
 threaded environment, there's no external context (like thread and thread
 local storage) to associate with each request. Thus, there're no "global"
 (or thread-local "global") request and response objects, like Flask,
-Bottle, Django have. Instead, all picoweb functions explicitly pass current
-request and response objects around.
+Bottle, Django have. Instead, all picoweb functions explicitly pass the
+current request and response objects around.
 
 Also, picoweb, being unbloated framework, tries to avoid avoidable
 abstractions. For example, HTTP at the lowest level has just read and write
 endpoints of a socket. To dispatch request, picoweb needs to pre-parse
 some request data from input stream, and it saves that partially (sic!)
 parsed data as a "request" object, and that's what passed to application
-handlers. However, there's no unavoidable need to have "response"
+handlers. However, there's no unavoidable need to have a "response"
 abstraction - the most efficient/lightweight application may want to
 just write raw HTTP status line, headers, and body to the socket. Thus,
-raw write stream is passed to application handlers as "response" object.
+raw write stream is passed to application handlers as the "response" object.
 (But high-level convenience functions to construct an HTTP response are
 provided).
 
@@ -104,7 +109,7 @@ Examples
   Django-style, using a centralized route list.
 * `example_webapp2.py` - Like above, but uses `app.route()` decorator
   for route specification, Flask-style.
-* [notes-pico](https://github.com/pfalcon/notes-pico) - More realistic
+* [notes-pico](https://github.com/pfalcon/notes-pico) - A more realistic
   example webapp, ported from the Flask original.
 
 
