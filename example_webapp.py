@@ -34,8 +34,8 @@ ROUTES = [
     ("/", index),
     ("/squares", squares),
     ("/file", lambda req, resp: (yield from app.sendfile(resp, "example_webapp.py"))),
-    # ... or match using a regex, a match result available as req.url_match
-    # for group extraction in your view.
+    # ... or match using a regex, the match result available as req.url_match
+    # for match group extraction in your view.
     (re.compile("^/iam/(.+)"), hello),
 ]
 
