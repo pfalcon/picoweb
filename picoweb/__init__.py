@@ -99,10 +99,10 @@ class WebApp:
         headers = {}
         while True:
             l = yield from reader.readline()
+            if l == b"\r\n":
+                break
             # TODO: bytes vs str
             l = l.decode()
-            if l == "\r\n":
-                break
             k, v = l.split(":", 1)
             headers[k] = v.strip()
 #        print("================")
