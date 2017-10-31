@@ -132,7 +132,9 @@ class WebApp:
 
         # Find handler to serve this request in app's url_map
         found = False
-        for pattern, handler, *extra in app.url_map:
+        for e in app.url_map:
+            pattern = e[0]
+            handler = e[1]
             if path == pattern:
                 found = True
                 break
