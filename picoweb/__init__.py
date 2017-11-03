@@ -78,6 +78,18 @@ class WebApp:
         # Instantiated lazily
         self.template_loader = None
 
+    def parse_headers(self, reader):
+        headers = {}
+        while True:
+            l = yield from reader.readline()
+            if l == b"\r\n":
+                break
+            # TODO: bytes vs str
+            l = l.decode()
+            k, v = l.split(":", 1)
+            headers[k] = v.strip()
+        return headers
+
     def _handle(self, reader, writer):
         if self.debug:
             micropython.mem_info()
@@ -96,18 +108,12 @@ class WebApp:
         if len(path) > 1:
             qs = path[1]
         path = path[0]
-        headers = {}
-        while True:
-            l = yield from reader.readline()
-            if l == b"\r\n":
-                break
-            # TODO: bytes vs str
-            l = l.decode()
-            k, v = l.split(":", 1)
-            headers[k] = v.strip()
+
+        req.headers = yield from self.parse_headers(reader)
+
 #        print("================")
 #        print(req, writer)
-#        print(req, (method, path, qs, proto), headers)
+#        print(req, (method, path, qs, proto), req.headers)
 
         # Find which mounted subapp (if any) should handle this request
         app = self
@@ -153,7 +159,6 @@ class WebApp:
             req.method = method
             req.path = path
             req.qs = qs
-            req.headers = headers
             req.reader = reader
             yield from handler(req, writer)
         else:
