@@ -120,7 +120,7 @@ class WebApp:
                     app = subapp
                     found = True
                     path = path[len(root):]
-                    if not path or path[0] != "/":
+                    if not path.startswith("/"):
                         path = "/" + path
                     break
             if not found:
