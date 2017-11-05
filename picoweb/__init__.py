@@ -109,8 +109,6 @@ class WebApp:
             qs = path[1]
         path = path[0]
 
-        req.headers = yield from self.parse_headers(reader)
-
 #        print("================")
 #        print(req, writer)
 #        print(req, (method, path, qs, proto), req.headers)
@@ -155,6 +153,9 @@ class WebApp:
                     req.url_match = m
                     found = True
                     break
+
+        req.headers = yield from self.parse_headers(reader)
+
         if found:
             req.method = method
             req.path = path
