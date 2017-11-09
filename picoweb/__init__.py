@@ -17,6 +17,8 @@ def get_mime_type(fname):
         return "text/html"
     if fname.endswith(".css"):
         return "text/css"
+    if fname.endswith(".png"):
+        return "image"
     return "text/plain"
 
 def sendstream(writer, f):
