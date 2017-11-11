@@ -158,17 +158,19 @@ class WebApp:
 
         req.headers = yield from self.parse_headers(reader)
 
+        close = True
         if found:
             req.method = method
             req.path = path
             req.qs = qs
             req.reader = reader
-            yield from handler(req, writer)
+            close = yield from handler(req, writer)
         else:
             yield from start_response(writer, status="404")
             yield from writer.awrite("404\r\n")
         #print(req, "After response write")
-        yield from writer.aclose()
+        if close is not False:
+            yield from writer.aclose()
         if __debug__ and self.debug > 1:
             print(req, "Finished processing request")
 
