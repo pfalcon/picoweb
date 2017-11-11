@@ -22,7 +22,7 @@ Features:
 Requirements and optional modules
 =================================
 `picoweb` depends on `uasyncio` for asynchronous networking
-(https://github.com/micropython/micropython-lib/tree/asyncio).
+(https://github.com/micropython/micropython-lib/tree/master/uasyncio).
 
 It is also indended to be used with `utemplate`
 (https://github.com/pfalcon/utemplate) for templating, but this is
