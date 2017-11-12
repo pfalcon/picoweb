@@ -79,6 +79,7 @@ class WebApp:
         self.inited = False
         # Instantiated lazily
         self.template_loader = None
+        self.headers_mode = "parse"
 
     def parse_headers(self, reader):
         headers = {}
@@ -141,6 +142,10 @@ class WebApp:
         for e in app.url_map:
             pattern = e[0]
             handler = e[1]
+            extra = {}
+            if len(e) > 2:
+                extra = e[2]
+
             if path == pattern:
                 found = True
                 break
@@ -156,7 +161,20 @@ class WebApp:
                     found = True
                     break
 
-        req.headers = yield from self.parse_headers(reader)
+        if not found:
+            headers_mode = "skip"
+        else:
+            headers_mode = extra.get("headers", self.headers_mode)
+
+        if headers_mode == "skip":
+            while True:
+                l = yield from reader.readline()
+                if l == b"\r\n":
+                    break
+        elif headers_mode == "parse":
+            req.headers = yield from self.parse_headers(reader)
+        else:
+            assert headers_mode == "leave"
 
         close = True
         if found:
