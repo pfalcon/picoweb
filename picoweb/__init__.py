@@ -1,3 +1,4 @@
+import sys
 import gc
 import micropython
 import utime
@@ -96,97 +97,103 @@ class WebApp:
     def _handle(self, reader, writer):
         if self.debug:
             micropython.mem_info()
-        request_line = yield from reader.readline()
-        if request_line == b"":
-            print(reader, "EOF on request start")
-            yield from writer.aclose()
-            return
-        req = HTTPRequest()
-        # TODO: bytes vs str
-        request_line = request_line.decode()
-        method, path, proto = request_line.split()
-        print('%.3f %s %s "%s %s"' % (utime.time(), req, writer, method, path))
-        path = path.split("?", 1)
-        qs = ""
-        if len(path) > 1:
-            qs = path[1]
-        path = path[0]
-
-#        print("================")
-#        print(req, writer)
-#        print(req, (method, path, qs, proto), req.headers)
-
-        # Find which mounted subapp (if any) should handle this request
-        app = self
-        while True:
-            found = False
-            for subapp in app.mounts:
-                root = subapp.url
-                print(path, "vs", root)
-                if path[:len(root)] == root:
-                    app = subapp
-                    found = True
-                    path = path[len(root):]
-                    if not path.startswith("/"):
-                        path = "/" + path
-                    break
-            if not found:
-                break
-
-        # We initialize apps on demand, when they really get requests
-        if not app.inited:
-            app.init()
-
-        # Find handler to serve this request in app's url_map
-        found = False
-        for e in app.url_map:
-            pattern = e[0]
-            handler = e[1]
-            extra = {}
-            if len(e) > 2:
-                extra = e[2]
-
-            if path == pattern:
-                found = True
-                break
-            elif not isinstance(pattern, str):
-                # Anything which is non-string assumed to be a ducktype
-                # pattern matcher, whose .match() method is called. (Note:
-                # Django uses .search() instead, but .match() is more
-                # efficient and we're not exactly compatible with Django
-                # URL matching anyway.)
-                m = pattern.match(path)
-                if m:
-                    req.url_match = m
-                    found = True
-                    break
-
-        if not found:
-            headers_mode = "skip"
-        else:
-            headers_mode = extra.get("headers", self.headers_mode)
-
-        if headers_mode == "skip":
-            while True:
-                l = yield from reader.readline()
-                if l == b"\r\n":
-                    break
-        elif headers_mode == "parse":
-            req.headers = yield from self.parse_headers(reader)
-        else:
-            assert headers_mode == "leave"
 
         close = True
-        if found:
-            req.method = method
-            req.path = path
-            req.qs = qs
-            req.reader = reader
-            close = yield from handler(req, writer)
-        else:
-            yield from start_response(writer, status="404")
-            yield from writer.awrite("404\r\n")
-        #print(req, "After response write")
+        try:
+            request_line = yield from reader.readline()
+            if request_line == b"":
+                print(reader, "EOF on request start")
+                yield from writer.aclose()
+                return
+            req = HTTPRequest()
+            # TODO: bytes vs str
+            request_line = request_line.decode()
+            method, path, proto = request_line.split()
+            print('%.3f %s %s "%s %s"' % (utime.time(), req, writer, method, path))
+            path = path.split("?", 1)
+            qs = ""
+            if len(path) > 1:
+                qs = path[1]
+            path = path[0]
+
+    #        print("================")
+    #        print(req, writer)
+    #        print(req, (method, path, qs, proto), req.headers)
+
+            # Find which mounted subapp (if any) should handle this request
+            app = self
+            while True:
+                found = False
+                for subapp in app.mounts:
+                    root = subapp.url
+                    print(path, "vs", root)
+                    if path[:len(root)] == root:
+                        app = subapp
+                        found = True
+                        path = path[len(root):]
+                        if not path.startswith("/"):
+                            path = "/" + path
+                        break
+                if not found:
+                    break
+
+            # We initialize apps on demand, when they really get requests
+            if not app.inited:
+                app.init()
+
+            # Find handler to serve this request in app's url_map
+            found = False
+            for e in app.url_map:
+                pattern = e[0]
+                handler = e[1]
+                extra = {}
+                if len(e) > 2:
+                    extra = e[2]
+
+                if path == pattern:
+                    found = True
+                    break
+                elif not isinstance(pattern, str):
+                    # Anything which is non-string assumed to be a ducktype
+                    # pattern matcher, whose .match() method is called. (Note:
+                    # Django uses .search() instead, but .match() is more
+                    # efficient and we're not exactly compatible with Django
+                    # URL matching anyway.)
+                    m = pattern.match(path)
+                    if m:
+                        req.url_match = m
+                        found = True
+                        break
+
+            if not found:
+                headers_mode = "skip"
+            else:
+                headers_mode = extra.get("headers", self.headers_mode)
+
+            if headers_mode == "skip":
+                while True:
+                    l = yield from reader.readline()
+                    if l == b"\r\n":
+                        break
+            elif headers_mode == "parse":
+                req.headers = yield from self.parse_headers(reader)
+            else:
+                assert headers_mode == "leave"
+
+            if found:
+                req.method = method
+                req.path = path
+                req.qs = qs
+                req.reader = reader
+                close = yield from handler(req, writer)
+            else:
+                yield from start_response(writer, status="404")
+                yield from writer.awrite("404\r\n")
+            #print(req, "After response write")
+        except Exception as e:
+            print("%.3f %s %s %r" % (utime.time(), req, writer, e))
+            sys.print_exception(e)
+
         if close is not False:
             yield from writer.aclose()
         if __debug__ and self.debug > 1:
