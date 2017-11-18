@@ -116,7 +116,7 @@ Examples
 Running under CPython
 =====================
 
-Initial versions on picoweb could run under CPython, but later it was
+Initial versions of picoweb could run under CPython, but later it was
 further optimized for MicroPython, and ability to run under CPython
 regressed. It's still on TODO to fix it, instructions below tell how
 it used to work.
