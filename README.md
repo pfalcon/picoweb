@@ -109,6 +109,11 @@ Examples
   Django-style, using a centralized route list.
 * `example_webapp2.py` - Like above, but uses `app.route()` decorator
   for route specification, Flask-style.
+* `examples/` - Additional examples for various features of picoweb.
+  See comments in each file for additional info. To run examples in
+  this directory, you normalling would need to have picoweb installed
+  (i.e. available in your MICROPYPATH, which defaults to
+  `~/.micropython/lib/`).
 * [notes-pico](https://github.com/pfalcon/notes-pico) - A more realistic
   example webapp, ported from the Flask original.
 
