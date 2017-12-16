@@ -1,5 +1,5 @@
 from setuptools import setup
-import optimize_upip
+import sdist_upip
 
 
 setup(name='picoweb',
@@ -11,7 +11,7 @@ for MicroPython.org and its uasyncio module.",
       author='Paul Sokolovsky',
       author_email='pfalcon@users.sourceforge.net',
       license='MIT',
-      cmdclass={'optimize_upip': optimize_upip.OptimizeUpip},
+      cmdclass={'sdist': sdist_upip.sdist},
       packages=['picoweb'],
       # Note: no explicit dependency on 'utemplate', if a specific app uses
       # templates, it must depend on it.
