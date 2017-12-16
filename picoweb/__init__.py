@@ -53,7 +53,7 @@ class HTTPRequest:
         pass
 
     def read_form_data(self):
-        size = int(self.headers["Content-Length"])
+        size = int(self.headers[b"Content-Length"])
         data = yield from self.reader.read(size)
         form = parse_qs(data.decode())
         self.form = form
@@ -88,9 +88,7 @@ class WebApp:
             l = yield from reader.readline()
             if l == b"\r\n":
                 break
-            # TODO: bytes vs str
-            l = l.decode()
-            k, v = l.split(":", 1)
+            k, v = l.split(b":", 1)
             headers[k] = v.strip()
         return headers
 
