@@ -18,17 +18,22 @@ def get_mime_type(fname):
         return "text/html"
     if fname.endswith(".css"):
         return "text/css"
-    if fname.endswith(".png") or fname.endswith(".jpg"):
-        return "image"
+    if fname.endswith(".png"):
+        return "image/png"
+    if fname.endswith(".jpg"):
+        return "image/jpeg"
+    if fname.endswith(".js"):
+        return "application/javascript"
     return "text/plain"
+
 
 def sendstream(writer, f):
     buf = bytearray(64)
     while True:
-        l = f.readinto(buf)
-        if not l:
+        line = f.readinto(buf)
+        if not line:
             break
-        yield from writer.awrite(buf, 0, l)
+        yield from writer.awrite(buf, 0, line)
 
 
 def jsonify(writer, dict):
@@ -36,11 +41,13 @@ def jsonify(writer, dict):
     yield from start_response(writer, "application/json")
     yield from writer.awrite(ujson.dumps(dict))
 
+
 def start_response(writer, content_type="text/html", status="200"):
     yield from writer.awrite("HTTP/1.0 %s NA\r\n" % status)
     yield from writer.awrite("Content-Type: ")
     yield from writer.awrite(content_type)
     yield from writer.awrite("\r\n\r\n")
+
 
 def http_error(writer, status):
     yield from start_response(writer, status=status)
@@ -85,8 +92,8 @@ class WebApp:
     def parse_headers(self, reader):
         headers = {}
         while True:
-            l = yield from reader.readline()
-            if l == b"\r\n":
+            line = yield from reader.readline()
+            if line == b"\r\n":
                 break
             k, v = l.split(b":", 1)
             headers[k] = v.strip()
@@ -114,9 +121,9 @@ class WebApp:
                 qs = path[1]
             path = path[0]
 
-    #        print("================")
-    #        print(req, writer)
-    #        print(req, (method, path, qs, proto), req.headers)
+            # print("================")
+            # print(req, writer)
+            # print(req, (method, path, qs, proto), req.headers)
 
             # Find which mounted subapp (if any) should handle this request
             app = self
@@ -170,8 +177,8 @@ class WebApp:
 
             if headers_mode == "skip":
                 while True:
-                    l = yield from reader.readline()
-                    if l == b"\r\n":
+                    line = yield from reader.readline()
+                    if line == b"\r\n":
                         break
             elif headers_mode == "parse":
                 req.headers = yield from self.parse_headers(reader)
@@ -187,7 +194,7 @@ class WebApp:
             else:
                 yield from start_response(writer, status="404")
                 yield from writer.awrite("404\r\n")
-            #print(req, "After response write")
+            # print(req, "After response write")
         except Exception as e:
             print("%.3f %s %s %r" % (utime.time(), req, writer, e))
             sys.print_exception(e)
@@ -198,7 +205,7 @@ class WebApp:
             print(req, "Finished processing request")
 
     def mount(self, url, app):
-        "Mount a sub-app at the url of current app."
+        """Mount a sub-app at the url of current app."""
         # Inspired by Bottle. It might seem that dispatching to
         # subapps would rather be handled by normal routes, but
         # arguably, that's less efficient. Taking into account
@@ -231,7 +238,7 @@ class WebApp:
             yield from writer.awrite(s)
 
     def render_str(self, tmpl_name, args=()):
-        #TODO: bloat
+        # TODO: bloat
         tmpl = self._load_template(tmpl_name)
         return ''.join(tmpl(*args))
 
