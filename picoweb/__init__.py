@@ -36,11 +36,14 @@ def jsonify(writer, dict):
     yield from start_response(writer, "application/json")
     yield from writer.awrite(ujson.dumps(dict))
 
-def start_response(writer, content_type="text/html", status="200"):
+def start_response(writer, content_type="text/html", status="200", headers=None):
     yield from writer.awrite("HTTP/1.0 %s NA\r\n" % status)
     yield from writer.awrite("Content-Type: ")
     yield from writer.awrite(content_type)
-    yield from writer.awrite("\r\n\r\n")
+    yield from writer.awrite("\r\n")
+    if headers:
+        yield from writer.awrite(headers)
+    yield from writer.awrite("\r\n")
 
 def http_error(writer, status):
     yield from start_response(writer, status=status)
@@ -235,12 +238,12 @@ class WebApp:
         tmpl = self._load_template(tmpl_name)
         return ''.join(tmpl(*args))
 
-    def sendfile(self, writer, fname, content_type=None):
+    def sendfile(self, writer, fname, content_type=None, headers=None):
         if not content_type:
             content_type = get_mime_type(fname)
         try:
             with pkg_resources.resource_stream(self.pkg, fname) as f:
-                yield from start_response(writer, content_type)
+                yield from start_response(writer, content_type, "200", headers)
                 yield from sendstream(writer, f)
         except OSError as e:
             if e.args[0] == uerrno.ENOENT:
