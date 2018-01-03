@@ -44,7 +44,14 @@ def start_response(writer, content_type="text/html", status="200", headers=None)
         yield from writer.awrite("\r\n\r\n")
         return
     yield from writer.awrite("\r\n")
-    yield from writer.awrite(headers)
+    if isinstance(headers, bytes) or isinstance(headers, str):
+        yield from writer.awrite(headers)
+    else:
+        for h, v in headers.items():
+            yield from writer.awrite(k)
+            yield from writer.awrite(": ")
+            yield from writer.awrite(v)
+            yield from writer.awrite("\r\n")
     yield from writer.awrite("\r\n")
 
 def http_error(writer, status):
