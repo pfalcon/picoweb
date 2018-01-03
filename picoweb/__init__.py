@@ -40,9 +40,11 @@ def start_response(writer, content_type="text/html", status="200", headers=None)
     yield from writer.awrite("HTTP/1.0 %s NA\r\n" % status)
     yield from writer.awrite("Content-Type: ")
     yield from writer.awrite(content_type)
+    if not headers:
+        yield from writer.awrite("\r\n\r\n")
+        return
     yield from writer.awrite("\r\n")
-    if headers:
-        yield from writer.awrite(headers)
+    yield from writer.awrite(headers)
     yield from writer.awrite("\r\n")
 
 def http_error(writer, status):
