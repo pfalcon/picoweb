@@ -47,7 +47,7 @@ def start_response(writer, content_type="text/html", status="200", headers=None)
     if isinstance(headers, bytes) or isinstance(headers, str):
         yield from writer.awrite(headers)
     else:
-        for h, v in headers.items():
+        for k, v in headers.items():
             yield from writer.awrite(k)
             yield from writer.awrite(": ")
             yield from writer.awrite(v)
