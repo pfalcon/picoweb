@@ -1,5 +1,6 @@
-Intro
-=====
+picoweb
+=======
+
 picoweb is a "micro" web micro-framework (thus, "pico-framework") for
 radically unbloated web applications using radically unbloated Python
 implementation, MicroPython, https://github.com/micropython/micropython.
@@ -7,7 +8,7 @@ implementation, MicroPython, https://github.com/micropython/micropython.
 Features:
 
 * Asynchronous from the start, using unbloated asyncio-like library
-  for MicroPython ([uasyncio](https://github.com/micropython/micropython-lib/tree/master/uasyncio)).
+  for MicroPython (`uasyncio <https://github.com/micropython/micropython-lib/tree/master/uasyncio>`_).
 * Small memory usage. Initial version required about 64K of heap for
   a trivial web app, and since then, it was optimized to allow run
   more or less realistic web app in ~36K of heap. More optimizations
@@ -20,36 +21,38 @@ Features:
 
 
 Requirements and optional modules
-=================================
-`picoweb` depends on `uasyncio` for asynchronous networking
+---------------------------------
+
+``picoweb`` depends on ``uasyncio`` for asynchronous networking
 (https://github.com/micropython/micropython-lib/tree/master/uasyncio).
 
-It is also indended to be used with `utemplate`
+It is also indended to be used with ``utemplate``
 (https://github.com/pfalcon/utemplate) for templating, but this is
 a "soft" dependency - picoweb offers convenience functions to use
-`utemplate` templates, but if you don't use them or will handle
+``utemplate`` templates, but if you don't use them or will handle
 templating in your app (e.g. with a different library), it won't be
 imported.
 
-For database access, there are following options (`picoweb` does
+For database access, there are following options (``picoweb`` does
 not depend on any of them, up to your application to choose):
 
-* [btree](http://docs.micropython.org/en/latest/unix/library/btree.html)
+* `btree <http://docs.micropython.org/en/latest/unix/library/btree.html>`_
   builtin MicroPython module. This is a recommended way to do a database
   storage for `picoweb`, as it allows portability across all MicroPython
   targets, starting with very memory- and storage-limited baremetal systems.
-* `btreedb` wrapper on top of `btree` builtin module. This may add some
+* ``btreedb`` wrapper on top of ``btree`` builtin module. This may add some
   overhead, but may allow to make an application portable between different
   database backends (`filedb` and `uorm` below).
   https://github.com/pfalcon/micropython-btreedb
-* `filedb`, for a simple database using files in a filesystem
+* ``filedb``, for a simple database using files in a filesystem
   https://github.com/pfalcon/filedb
-* `uorm`, for Sqlite3 database access (works only with MicroPython
+* ``uorm``, for Sqlite3 database access (works only with MicroPython
   Unix port) https://github.com/pfalcon/uorm
 
 
 Details
-=======
+-------
+
 picoweb API is roughly based on APIs of other well-known Python web
 frameworks. The strongest affinity is Flask, http://flask.pocoo.org, as
 arguably the most popular micro-framework. Some features are also based on
@@ -92,8 +95,9 @@ providing extra wrapper class on top of it.
 
 
 API reference
-=============
-The best API reference currently are examples (see below) and the `picoweb`
+-------------
+
+The best API reference currently are examples (see below) and the ``picoweb``
 source code itself. It's under 10K, so enjoy:
 https://github.com/pfalcon/picoweb/blob/master/picoweb/__init__.py
 
@@ -101,7 +105,8 @@ Note that API is experimental and may undergo changes.
 
 
 Examples
-========
+--------
+
 * `example_webapp.py` - A simple webapp showing you how to generate a
   complete HTTP response yourself, use `picoweb` convenience functions
   for HTTP headers generation, and use of templates. Mapping from
@@ -114,12 +119,12 @@ Examples
   this directory, you normalling would need to have picoweb installed
   (i.e. available in your MICROPYPATH, which defaults to
   `~/.micropython/lib/`).
-* [notes-pico](https://github.com/pfalcon/notes-pico) - A more realistic
+* `notes-pico <https://github.com/pfalcon/notes-pico>`_ - A more realistic
   example webapp, ported from the Flask original.
 
 
-Running under CPython
-=====================
+Running under CPython (regressed)
+---------------------------------
 
 Initial versions of picoweb could run under CPython, but later it was
 further optimized for MicroPython, and ability to run under CPython
@@ -129,6 +134,6 @@ it used to work.
 At least CPython 3.4.2 is required (for asyncio loop.create_task() support).
 To run under CPython, uasyncio compatibility module for CPython is required
 (micropython-cpython-uasyncio). This and other dependencies can be installed
-using requirements-cpython.txt:
+using requirements-cpython.txt::
 
     pip install -r requirements-cpython.txt
