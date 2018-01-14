@@ -107,18 +107,20 @@ Note that API is experimental and may undergo changes.
 Examples
 --------
 
-* `example_webapp.py` - A simple webapp showing you how to generate a
-  complete HTTP response yourself, use `picoweb` convenience functions
-  for HTTP headers generation, and use of templates. Mapping from
-  URLs to webapp view functions ("web routes" or just "routes") is done
-  Django-style, using a centralized route list.
-* `example_webapp2.py` - Like above, but uses `app.route()` decorator
-  for route specification, Flask-style.
-* `examples/` - Additional examples for various features of picoweb.
-  See comments in each file for additional info. To run examples in
-  this directory, you normalling would need to have picoweb installed
-  (i.e. available in your MICROPYPATH, which defaults to
-  `~/.micropython/lib/`).
+* `example_webapp.py <https://github.com/pfalcon/picoweb/blob/master/example_webapp.py>`_ -
+  A simple webapp showing you how to generate a complete HTTP response
+  yourself, use ``picoweb`` convenience functions for HTTP headers generation,
+  and use of templates. Mapping from URLs to webapp view functions ("web
+  routes" or just "routes") is done Django-style, using a centralized route
+  list.
+* `example_webapp2.py <https://github.com/pfalcon/picoweb/blob/master/example_webapp2.py>`_ -
+  Like above, but uses ``app.route()`` decorator for route specification,
+  Flask-style.
+* `examples/ <https://github.com/pfalcon/picoweb/tree/master/examples>`_ -
+  Additional examples for various features of picoweb. See comments in each
+  file for additional info. To run examples in this directory, you normally
+  would need to have picoweb installed (i.e. available in your ``MICROPYPATH``,
+  which defaults to ``~/.micropython/lib/``).
 * `notes-pico <https://github.com/pfalcon/notes-pico>`_ - A more realistic
   example webapp, ported from the Flask original.
 
