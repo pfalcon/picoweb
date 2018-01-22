@@ -18,6 +18,8 @@ def get_mime_type(fname):
         return "text/html"
     if fname.endswith(".css"):
         return "text/css"
+    if fname.endswith(".js"):
+        return "text/javascript"
     if fname.endswith(".png") or fname.endswith(".jpg"):
         return "image"
     return "text/plain"
