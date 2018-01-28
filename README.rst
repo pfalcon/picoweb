@@ -116,6 +116,8 @@ Examples
 * `example_webapp2.py <https://github.com/pfalcon/picoweb/blob/master/example_webapp2.py>`_ -
   Like above, but uses ``app.route()`` decorator for route specification,
   Flask-style.
+* `example_with_tasks.py <https://github.com/pfalcon/picoweb/blob/master/example_with_tasks.py>`__ -
+  use ``app.route()`` and async task (in example: seconds timer)
 * `examples/ <https://github.com/pfalcon/picoweb/tree/master/examples>`_ -
   Additional examples for various features of picoweb. See comments in each
   file for additional info. To run examples in this directory, you normally
