@@ -276,16 +276,20 @@ class WebApp:
         This is good place to connect to/initialize a database, for example."""
         self.inited = True
 
-    def run(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False):
+    def init_as_task(host="127.0.0.1", port=8081, debug=False, lazy_init=False):
         gc.collect()
         self.debug = int(debug)
         self.init()
         if not lazy_init:
             for app in self.mounts:
                 app.init()
-        loop = asyncio.get_event_loop()
         if debug:
             print("* Running on http://%s:%s/" % (host, port))
-        loop.create_task(asyncio.start_server(self._handle, host, port))
+        return asyncio.start_server(self._handle, host, port)
+
+    def run(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False):
+        loop = asyncio.get_event_loop()
+        generator = self.init_as_task(host, port, debug, lazy_init)
+        loop.create_task(generator)
         loop.run_forever()
         loop.close()
