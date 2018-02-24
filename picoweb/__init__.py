@@ -115,23 +115,26 @@ class WebApp:
         try:
             request_line = yield from reader.readline()
             if request_line == b"":
-                print(reader, "EOF on request start")
+                if self.debug:
+                    print(reader, "EOF on request start")
                 yield from writer.aclose()
                 return
             req = HTTPRequest()
             # TODO: bytes vs str
             request_line = request_line.decode()
             method, path, proto = request_line.split()
-            print('%.3f %s %s "%s %s"' % (utime.time(), req, writer, method, path))
+            if self.debug:
+                print('%.3f %s %s "%s %s"' % (utime.time(), req, writer, method, path))
             path = path.split("?", 1)
             qs = ""
             if len(path) > 1:
                 qs = path[1]
             path = path[0]
 
-    #        print("================")
-    #        print(req, writer)
-    #        print(req, (method, path, qs, proto), req.headers)
+    #       if self.debug:
+    #           print("================")
+    #           print(req, writer)
+    #           print(req, (method, path, qs, proto), req.headers)
 
             # Find which mounted subapp (if any) should handle this request
             app = self
@@ -139,7 +142,8 @@ class WebApp:
                 found = False
                 for subapp in app.mounts:
                     root = subapp.url
-                    print(path, "vs", root)
+                    if self.debug:
+                        print(path, "vs", root)
                     if path[:len(root)] == root:
                         app = subapp
                         found = True
@@ -202,10 +206,12 @@ class WebApp:
             else:
                 yield from start_response(writer, status="404")
                 yield from writer.awrite("404\r\n")
-            #print(req, "After response write")
+            #if self.debug:
+            #   print(req, "After response write")
         except Exception as e:
-            print("%.3f %s %s %r" % (utime.time(), req, writer, e))
-            sys.print_exception(e)
+            if self.debug:
+                print("%.3f %s %s %r" % (utime.time(), req, writer, e))
+                sys.print_exception(e)
 
         if close is not False:
             yield from writer.aclose()
@@ -265,7 +271,8 @@ class WebApp:
 
     def handle_static(self, req, resp):
         path = req.url_match.group(1)
-        print(path)
+        if self.debug:
+            print(path)
         if ".." in path:
             yield from http_error(resp, "403")
             return
