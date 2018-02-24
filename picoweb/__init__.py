@@ -129,9 +129,9 @@ class WebApp:
                 qs = path[1]
             path = path[0]
 
-    #        print("================")
-    #        print(req, writer)
-    #        print(req, (method, path, qs, proto), req.headers)
+            #print("================")
+            #print(req, writer)
+            #print(req, (method, path, qs, proto), req.headers)
 
             # Find which mounted subapp (if any) should handle this request
             app = self
@@ -139,7 +139,7 @@ class WebApp:
                 found = False
                 for subapp in app.mounts:
                     root = subapp.url
-                    print(path, "vs", root)
+                    #print(path, "vs", root)
                     if path[:len(root)] == root:
                         app = subapp
                         found = True
