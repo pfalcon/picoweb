@@ -1,3 +1,6 @@
+# Picoweb web pico-framework for MicroPython
+# Copyright (c) 2014-2018 Paul Sokolovsky
+# SPDX-License-Identifier: MIT
 import sys
 import gc
 import micropython
