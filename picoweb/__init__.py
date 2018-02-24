@@ -108,21 +108,23 @@ class WebApp:
         return headers
 
     def _handle(self, reader, writer):
-        if self.debug:
+        if self.debug > 1:
             micropython.mem_info()
 
         close = True
         try:
             request_line = yield from reader.readline()
             if request_line == b"":
-                print(reader, "EOF on request start")
+                if self.debug >= 0:
+                    self.log.error("%s: EOF on request start" % reader)
                 yield from writer.aclose()
                 return
             req = HTTPRequest()
             # TODO: bytes vs str
             request_line = request_line.decode()
             method, path, proto = request_line.split()
-            print('%.3f %s %s "%s %s"' % (utime.time(), req, writer, method, path))
+            if self.debug >= 0:
+                self.log.info('%.3f %s %s "%s %s"' % (utime.time(), req, writer, method, path))
             path = path.split("?", 1)
             qs = ""
             if len(path) > 1:
@@ -204,13 +206,13 @@ class WebApp:
                 yield from writer.awrite("404\r\n")
             #print(req, "After response write")
         except Exception as e:
-            print("%.3f %s %s %r" % (utime.time(), req, writer, e))
-            sys.print_exception(e)
+            if self.debug >= 0:
+                self.log.exc(e, "%.3f %s %s %r" % (utime.time(), req, writer, e))
 
         if close is not False:
             yield from writer.aclose()
         if __debug__ and self.debug > 1:
-            print(req, "Finished processing request")
+            self.log.debug("%.3f %s Finished processing request", utime.time(), req)
 
     def mount(self, url, app):
         "Mount a sub-app at the url of current app."
@@ -276,7 +278,13 @@ class WebApp:
         This is good place to connect to/initialize a database, for example."""
         self.inited = True
 
-    def run(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False):
+    def run(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False, log=None):
+        if log is None and debug >= 0:
+            import logging
+            log = logging.getLogger("picoweb")
+            if debug > 0:
+                log.setLevel(logging.DEBUG)
+        self.log = log
         gc.collect()
         self.debug = int(debug)
         self.init()
@@ -284,7 +292,7 @@ class WebApp:
             for app in self.mounts:
                 app.init()
         loop = asyncio.get_event_loop()
-        if debug:
+        if debug > 0:
             print("* Running on http://%s:%s/" % (host, port))
         loop.create_task(asyncio.start_server(self._handle, host, port))
         loop.run_forever()
