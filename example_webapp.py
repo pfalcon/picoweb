@@ -45,4 +45,9 @@ logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(level=logging.DEBUG)
 
 app = picoweb.WebApp(__name__, ROUTES)
-app.run(debug=True)
+# debug values:
+# -1 disable all logging
+# 0 (False) normal logging: requests and errors
+# 1 (True) debug logging
+# 2 extra debug logging
+app.run(debug=1)
