@@ -3,12 +3,12 @@ picoweb
 
 picoweb is a "micro" web micro-framework (thus, "pico-framework") for
 radically unbloated web applications using radically unbloated Python
-implementation, MicroPython, https://github.com/micropython/micropython.
+implementation, MicroPython, https://github.com/pfalcon/micropython.
 
 Features:
 
 * Asynchronous from the start, using unbloated asyncio-like library
-  for MicroPython (`uasyncio <https://github.com/micropython/micropython-lib/tree/master/uasyncio>`_).
+  for MicroPython (`uasyncio <https://github.com/pfalcon/micropython-lib/tree/master/uasyncio>`_).
 * Small memory usage. Initial version required about 64K of heap for
   a trivial web app, and since then, it was optimized to allow run
   more or less realistic web app in ~36K of heap. More optimizations
@@ -24,7 +24,7 @@ Requirements and optional modules
 ---------------------------------
 
 ``picoweb`` depends on ``uasyncio`` for asynchronous networking
-(https://github.com/micropython/micropython-lib/tree/master/uasyncio).
+(https://github.com/pfalcon/micropython-lib/tree/master/uasyncio).
 
 It is also indended to be used with ``utemplate``
 (https://github.com/pfalcon/utemplate) for templating, but this is
