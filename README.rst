@@ -49,6 +49,15 @@ not depend on any of them, up to your application to choose):
 * ``uorm``, for Sqlite3 database access (works only with MicroPython
   Unix port) https://github.com/pfalcon/uorm
 
+Last but not least, ``picoweb`` uses a standard ``logging``-compatible
+logger for diagnostic output (like a connection opened, errors and debug
+information). However this output is optional, and otherwise you can use
+a custom logging class instead of standard ``logging`` module. Due to this,
+and to not put additional dependencies burden on the small webapps for
+small systems, ``logging`` module is not included in ``picoweb``'s
+installation dependencies. Instead, a particular app using ``picoweb``
+should depend on ``micropython-logging`` package.
+
 
 Details
 -------
