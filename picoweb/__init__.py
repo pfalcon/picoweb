@@ -34,10 +34,10 @@ def sendstream(writer, f):
         yield from writer.awrite(buf, 0, l)
 
 
-def jsonify(writer, dict):
+def jsonify(writer, data, status="200", headers=None):
     import ujson
-    yield from start_response(writer, "application/json")
-    yield from writer.awrite(ujson.dumps(dict))
+    yield from start_response(writer, content_type="application/json", status=status, headers=headers)
+    yield from writer.awrite(ujson.dumps(data))
 
 def start_response(writer, content_type="text/html", status="200", headers=None):
     yield from writer.awrite("HTTP/1.0 %s NA\r\n" % status)
