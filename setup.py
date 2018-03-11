@@ -3,7 +3,7 @@ import sdist_upip
 
 
 setup(name='picoweb',
-      version='1.4.1',
+      version='1.4.2',
       description="A very lightweight, memory-efficient async web framework \
 for MicroPython.org and its uasyncio module.",
       long_description=open('README.rst').read(),
