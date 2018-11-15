@@ -10,4 +10,5 @@ describing what the example does.
 To run these examples, you normally need picoweb already installed (i.e.
 available in your MICROPYPATH). If you want a quick start, you need to
 try a couple of examples in the top-level dir mentioned above - those
-can be run directly from the git checkout.
+can be run directly from the git checkout. (And as a final hint, you can
+also copy any example to the top-level dir and run it from there too).
