@@ -13,11 +13,16 @@ def parse_qs(s):
             vals = [unquote_plus(x) for x in p.split("=", 1)]
             if len(vals) == 1:
                 vals.append(True)
-            if vals[0] in res:
-                res[vals[0]].append(vals[1])
+            old = res.get(vals[0])
+            if old is not None:
+                if not isinstance(old, list):
+                    old = [old]
+                    res[vals[0]] = old
+                old.append(vals[1])
             else:
-                res[vals[0]] = [vals[1]]
+                res[vals[0]] = vals[1]
     return res
 
-#print(unquote("foo"))
-#print(unquote("fo%41o+bar"))
+#print(parse_qs("foo"))
+#print(parse_qs("fo%41o+bar=+++1"))
+#print(parse_qs("foo=1&foo=2"))
