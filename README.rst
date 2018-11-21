@@ -98,23 +98,13 @@ provide special objects to handle form/get parameters, with features
 like "if request variable has only one value, the value is returned directly;
 otherwise, list of values is returned".
 
-.. raw:: html
-
-   <strike>
-
-However, Python standard library
+*<strike>However, Python standard library
 provides function parse_qs(), which always returns array of values (based
 on the fact that any request variable may have more than one value). Given
 2 choices, picoweb follows the interface of the standard library, instead of
-providing extra wrapper class on top of it.
-
-.. raw:: html
-
-   </strike>
-
-Changed in 1.5: now normal single-valued fields store the value directly,
-a list is used only for multi-valued fields. (Reasons: convenience, reduced
-memory usage.)
+providing extra wrapper class on top of it.</strike>* - Changed in 1.5: now
+normal single-valued fields store the value directly, a list is used only
+for multi-valued fields. (Reasons: convenience, reduced memory usage.)
 
 
 API reference
