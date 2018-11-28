@@ -39,7 +39,7 @@ def index(req, resp):
     yield from resp.awrite("You logged in with username: %s, password: %s" % (req.username, req.passwd))
 
 
-import logging
+import ulogging as logging
 logging.basicConfig(level=logging.INFO)
 
 app.run(debug=True)

@@ -38,7 +38,7 @@ def index(req, resp):
         "<input type='submit'></form>")
 
 
-import logging
+import ulogging as logging
 logging.basicConfig(level=logging.INFO)
 
 app.run(debug=True)

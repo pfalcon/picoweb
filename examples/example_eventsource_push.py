@@ -82,7 +82,7 @@ def push_count():
         await uasyncio.sleep(1)
 
 
-import logging
+import ulogging as logging
 logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(level=logging.DEBUG)
 

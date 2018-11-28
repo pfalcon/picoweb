@@ -45,7 +45,7 @@ def styles(req, resp):
     yield from app.sendfile(resp, "static/" + file_path, "text/css", headers)
 
 
-import logging
+import ulogging as logging
 logging.basicConfig(level=logging.INFO)
 
 app.run(debug=True)
