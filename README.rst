@@ -52,11 +52,16 @@ not depend on any of them, up to your application to choose):
 Last but not least, ``picoweb`` uses a standard ``logging``-compatible
 logger for diagnostic output (like a connection opened, errors and debug
 information). However this output is optional, and otherwise you can use
-a custom logging class instead of standard ``logging`` module. Due to this,
-and to not put additional dependencies burden on the small webapps for
-small systems, ``logging`` module is not included in ``picoweb``'s
-installation dependencies. Instead, a particular app using ``picoweb``
-should depend on ``micropython-logging`` package.
+a custom logging class instead of the standard ``logging``/``ulogging``
+module. Due to this, and to not put additional dependencies burden on
+the small webapps for small systems, ``logging`` module is not included
+in ``picoweb``'s installation dependencies. Instead, a particular app
+using ``picoweb`` should depend on ``micropython-ulogging`` or
+``micropython-ulogging`` package. Note that to disable use of logging,
+an application should start up using ``WebApp.run(debug=-1)``. The
+default value for ``debug`` parameter is 0 however, in which case
+picoweb will use ``ulogging`` module (on which your application needs
+to depend, again).
 
 
 Details
