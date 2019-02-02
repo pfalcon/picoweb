@@ -3,7 +3,8 @@ picoweb
 
 picoweb is a "micro" web micro-framework (thus, "pico-framework") for
 radically unbloated web applications using radically unbloated Python
-implementation, MicroPython, https://github.com/pfalcon/micropython.
+implementation, Pycopy, https://github.com/pfalcon/micropython
+(a fork of MicroPython optimized for developing async applications).
 
 Features:
 
