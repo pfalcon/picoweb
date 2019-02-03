@@ -77,6 +77,12 @@ class HTTPRequest:
         form = parse_qs(self.qs)
         self.form = form
 
+    def read_json_data(self):
+        import ujson
+        size = int(self.headers[b"Content-Length"])
+        data = yield from self.reader.read(size)
+        form = ujson.loads(data.decode())
+        self.form = form
 
 class WebApp:
 
