@@ -10,6 +10,8 @@ Features:
 
 * Asynchronous from the start, using unbloated asyncio-like library
   for MicroPython (`uasyncio <https://github.com/pfalcon/micropython-lib/tree/master/uasyncio>`_).
+  This means that ``picoweb`` can process multiple concurrent requests
+  at the same time (using I/O and/or CPU multiplexing).
 * Small memory usage. Initial version required about 64K of heap for
   a trivial web app, and since then, it was optimized to allow run
   more or less realistic web app in ~36K of heap. More optimizations
