@@ -3,9 +3,9 @@ import sdist_upip
 
 
 setup(name='picoweb',
-      version='1.5.2',
+      version='1.5.3',
       description="A very lightweight, memory-efficient async web framework \
-for MicroPython and its uasyncio module.",
+for MicroPython/Pycopy and its uasyncio module.",
       long_description=open('README.rst').read(),
       url='https://github.com/pfalcon/picoweb',
       author='Paul Sokolovsky',
