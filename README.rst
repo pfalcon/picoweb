@@ -60,7 +60,7 @@ module. Due to this, and to not put additional dependencies burden on
 the small webapps for small systems, ``logging`` module is not included
 in ``picoweb``'s installation dependencies. Instead, a particular app
 using ``picoweb`` should depend on ``micropython-ulogging`` or
-``micropython-ulogging`` package. Note that to disable use of logging,
+``micropython-logging`` package. Note that to disable use of logging,
 an application should start up using ``WebApp.run(debug=-1)``. The
 default value for ``debug`` parameter is 0 however, in which case
 picoweb will use ``ulogging`` module (on which your application needs
