@@ -28,6 +28,11 @@ Requirements and optional modules
 
 ``picoweb`` depends on ``uasyncio`` for asynchronous networking
 (https://github.com/pfalcon/micropython-lib/tree/master/uasyncio).
+``uasyncio`` itself depends on "Pycopy", a MicroPython variant with
+additional functionality and optimizations required for efficient
+async operation. ``uasyncio`` will NOT work on mainline MicroPython
+(but Pycopy is based on mainline MicroPython, and supports all targets
+it supports).
 
 It is also indended to be used with ``utemplate``
 (https://github.com/pfalcon/utemplate) for templating, but this is
