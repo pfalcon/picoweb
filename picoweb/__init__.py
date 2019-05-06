@@ -112,6 +112,7 @@ class WebApp:
             micropython.mem_info()
 
         close = True
+        req = None
         try:
             request_line = yield from reader.readline()
             if request_line == b"":
