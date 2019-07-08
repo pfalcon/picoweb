@@ -69,7 +69,7 @@ class HTTPRequest:
 
     def read_form_data(self):
         size = int(self.headers[b"Content-Length"])
-        data = yield from self.reader.read(size)
+        data = yield from self.reader.readexactly(size)
         form = parse_qs(data.decode())
         self.form = form
 
