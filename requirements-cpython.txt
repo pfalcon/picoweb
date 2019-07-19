@@ -1,2 +1,2 @@
-micropython-cpython-uasyncio
+pycopy-cpython-uasyncio
 utemplate
