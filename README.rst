@@ -3,19 +3,18 @@ picoweb
 
 picoweb is a "micro" web micro-framework (thus, "pico-framework") for
 radically unbloated web applications using radically unbloated Python
-implementation, Pycopy, https://github.com/pfalcon/micropython
-(a fork of MicroPython optimized for developing async applications).
+implementation, Pycopy, https://github.com/pfalcon/pycopy .
 
 Features:
 
 * Asynchronous from the start, using unbloated asyncio-like library
-  for MicroPython (`uasyncio <https://github.com/pfalcon/micropython-lib/tree/master/uasyncio>`_).
+  for Pycopy (`uasyncio <https://github.com/pfalcon/pycopy-lib/tree/master/uasyncio>`_).
   This means that ``picoweb`` can process multiple concurrent requests
   at the same time (using I/O and/or CPU multiplexing).
 * Small memory usage. Initial version required about 64K of heap for
   a trivial web app, and since then, it was optimized to allow run
   more or less realistic web app in ~36K of heap. More optimizations
-  on all the levels (MicroPython and up) are planned (but may lead to
+  on all the levels (Pycopy and up) are planned (but may lead to
   API changes).
 * Has API affinity with some well-known Python web micro-framework(s),
   thus it should be an easy start if you have experience with them, and
@@ -27,7 +26,7 @@ Requirements and optional modules
 ---------------------------------
 
 ``picoweb`` depends on ``uasyncio`` for asynchronous networking
-(https://github.com/pfalcon/micropython-lib/tree/master/uasyncio).
+(https://github.com/pfalcon/pycopy-lib/tree/master/uasyncio).
 ``uasyncio`` itself depends on "Pycopy", a MicroPython variant with
 additional functionality and optimizations required for efficient
 async operation. ``uasyncio`` will NOT work on mainline MicroPython
@@ -44,17 +43,17 @@ imported.
 For database access, there are following options (``picoweb`` does
 not depend on any of them, up to your application to choose):
 
-* `btree <http://docs.micropython.org/en/latest/unix/library/btree.html>`_
-  builtin MicroPython module. This is a recommended way to do a database
-  storage for `picoweb`, as it allows portability across all MicroPython
+* `btree <https://pycopy.readthedocs.io/en/latest/library/btree.html>`_
+  builtin Pycopy module. This is a recommended way to do a database
+  storage for `picoweb`, as it allows portability across all Pycopy
   targets, starting with very memory- and storage-limited baremetal systems.
 * ``btreedb`` wrapper on top of ``btree`` builtin module. This may add some
   overhead, but may allow to make an application portable between different
   database backends (`filedb` and `uorm` below).
-  https://github.com/pfalcon/micropython-btreedb
+  https://github.com/pfalcon/pycopy-btreedb
 * ``filedb``, for a simple database using files in a filesystem
   https://github.com/pfalcon/filedb
-* ``uorm``, for Sqlite3 database access (works only with MicroPython
+* ``uorm``, for Sqlite3 database access (works only with Pycopy
   Unix port) https://github.com/pfalcon/uorm
 
 Last but not least, ``picoweb`` uses a standard ``logging``-compatible
@@ -64,8 +63,8 @@ a custom logging class instead of the standard ``logging``/``ulogging``
 module. Due to this, and to not put additional dependencies burden on
 the small webapps for small systems, ``logging`` module is not included
 in ``picoweb``'s installation dependencies. Instead, a particular app
-using ``picoweb`` should depend on ``micropython-ulogging`` or
-``micropython-logging`` package. Note that to disable use of logging,
+using ``picoweb`` should depend on ``pycopy-ulogging`` or
+``pycopy-logging`` package. Note that to disable use of logging,
 an application should start up using ``WebApp.run(debug=-1)``. The
 default value for ``debug`` parameter is 0 however, in which case
 picoweb will use ``ulogging`` module (on which your application needs
@@ -155,13 +154,13 @@ Running under CPython (regressed)
 ---------------------------------
 
 Initial versions of picoweb could run under CPython, but later it was
-further optimized for MicroPython, and ability to run under CPython
+further optimized for Pycopy, and ability to run under CPython
 regressed. It's still on TODO to fix it, instructions below tell how
 it used to work.
 
 At least CPython 3.4.2 is required (for asyncio loop.create_task() support).
 To run under CPython, uasyncio compatibility module for CPython is required
-(micropython-cpython-uasyncio). This and other dependencies can be installed
+(pycopy-cpython-uasyncio). This and other dependencies can be installed
 using requirements-cpython.txt::
 
     pip install -r requirements-cpython.txt
