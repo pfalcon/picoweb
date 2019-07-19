@@ -3,9 +3,9 @@ import sdist_upip
 
 
 setup(name='picoweb',
-      version='1.6.1',
+      version='1.7.1',
       description="A very lightweight, memory-efficient async web framework \
-for MicroPython/Pycopy and its uasyncio module.",
+for Pycopy (https://github.com/pfalcon/pycopy) and its uasyncio module.",
       long_description=open('README.rst').read(),
       url='https://github.com/pfalcon/picoweb',
       author='Paul Sokolovsky',
@@ -15,5 +15,5 @@ for MicroPython/Pycopy and its uasyncio module.",
       packages=['picoweb'],
       # Note: no explicit dependency on 'utemplate', if a specific app uses
       # templates, it must depend on it. Likewise, don't depend on
-      # micropython-ulogging as application might not use logging.
-      install_requires=['micropython-uasyncio', 'micropython-pkg_resources'])
+      # pycopy-ulogging as application might not use logging.
+      install_requires=['pycopy-uasyncio', 'pycopy-pkg_resources'])
