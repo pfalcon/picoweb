@@ -225,6 +225,9 @@ class WebApp:
         # app, Bottle's way was followed.
         app.url = url
         self.mounts.append(app)
+        # TODO: Consider instead to do better subapp prefix matching
+        # in _handle() above.
+        self.mounts.sort(key=lambda app: len(app.url), reverse=True)
 
     def route(self, url, **kwargs):
         def _route(f):
