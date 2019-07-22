@@ -138,19 +138,14 @@ class WebApp:
 
             # Find which mounted subapp (if any) should handle this request
             app = self
-            while True:
-                found = False
-                for subapp in app.mounts:
-                    root = subapp.url
-                    #print(path, "vs", root)
-                    if path[:len(root)] == root:
-                        app = subapp
-                        found = True
-                        path = path[len(root):]
-                        if not path.startswith("/"):
-                            path = "/" + path
-                        break
-                if not found:
+            for subapp in app.mounts:
+                root = subapp.url
+                #print(path, "vs", root)
+                if path[:len(root)] == root:
+                    app = subapp
+                    path = path[len(root):]
+                    if not path.startswith("/"):
+                        path = "/" + path
                     break
 
             # We initialize apps on demand, when they really get requests
