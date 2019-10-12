@@ -282,6 +282,14 @@ class WebApp:
         This is good place to connect to/initialize a database, for example."""
         self.inited = True
 
+    def serve(self, loop, host, port):
+        # Actually serve client connections. Subclasses may override this
+        # to e.g. catch and handle exceptions when dealing with server socket
+        # (which are otherwise unhandled and will terminate a Picoweb app).
+        # Note: name and signature of this method may change.
+        loop.create_task(asyncio.start_server(self._handle, host, port))
+        loop.run_forever()
+
     def run(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False, log=None):
         if log is None and debug >= 0:
             import ulogging
@@ -298,6 +306,5 @@ class WebApp:
         loop = asyncio.get_event_loop()
         if debug > 0:
             print("* Running on http://%s:%s/" % (host, port))
-        loop.create_task(asyncio.start_server(self._handle, host, port))
-        loop.run_forever()
+        self.serve(loop, host, port)
         loop.close()
