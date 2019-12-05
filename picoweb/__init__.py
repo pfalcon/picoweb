@@ -308,3 +308,21 @@ class WebApp:
             print("* Running on http://%s:%s/" % (host, port))
         self.serve(loop, host, port)
         loop.close()
+
+    def get_server(self, host="127.0.0.1", port=8081, debug=False, lazy_init=False, log=None):
+        # Method to get a server task that can be used to start the picoweb
+        # server in an external asyncio loop.
+        if log is None and debug >= 0:
+            import ulogging
+            log = ulogging.getLogger("picoweb")
+            if debug > 0:
+                log.setLevel(ulogging.DEBUG)
+        self.log = log
+        gc.collect()
+        self.debug = int(debug)
+        self.init()
+        if not lazy_init:
+            for app in self.mounts:
+                app.init()
+
+        return (self._handle, host, port)
