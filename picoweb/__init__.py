@@ -13,6 +13,8 @@ import pkg_resources
 
 from .utils import parse_qs
 
+SEND_BUFSZ = 128
+
 
 def get_mime_type(fname):
     # Provide minimal detection of important file
@@ -26,7 +28,7 @@ def get_mime_type(fname):
     return "text/plain"
 
 def sendstream(writer, f):
-    buf = bytearray(64)
+    buf = bytearray(SEND_BUFSZ)
     while True:
         l = f.readinto(buf)
         if not l:
