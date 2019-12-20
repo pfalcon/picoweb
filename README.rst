@@ -162,3 +162,31 @@ To run under CPython, uasyncio compatibility module for CPython is required
 using requirements-cpython.txt::
 
     pip install -r requirements-cpython.txt
+
+Reporting Issues
+----------------
+
+Here are a few guidelines to make feedback more productive:
+
+1. Please be considerate of the overall best practices and common pitfalls in
+   reporting issues, this document gives a good overview:
+   `How to Report Bugs Effectively <https://www.chiark.greenend.org.uk/~sgtatham/bugs.html>`_.
+2. The reference platform for ``picoweb`` is the Unix port of Pycopy. All issues
+   reported must be validated against this version, to differentiate issues of
+   ``picoweb``/``uasyncio`` from the issues of your underlying platform.
+3. All reports must include version information of all components involved:
+   Pycopy, picoweb, uasyncio, uasyncio.core, any additional modules. Generally,
+   only the latest versions of the above are supported (this is what you get when
+   you install/reinstall components using the ``upip`` package manager). The
+   version information are thus first of all important for yourself, the issue
+   reporter, it allows you to double-check if you're using an outdated or
+   unsupported component.
+4. Feature requests: ``picoweb`` is by definition a pico-framework, and bound
+   to stay so. Feature requests are welcome, but please be considerate that
+   they may be outside the scope of core project. There's an easy way out
+   though: instead of putting more stuff *into* ``picoweb``, build new things
+   *on top* of it: via plugins, subclassing, additional modules etc. That's
+   how it was intended to be from the beginning!
+5. We would like to establish a dedicated QA team to support users of this
+   project better. If you would like to sponsor this effort, please let us
+   know.
