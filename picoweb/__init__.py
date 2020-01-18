@@ -211,11 +211,21 @@ class WebApp:
         except Exception as e:
             if self.debug >= 0:
                 self.log.exc(e, "%.3f %s %s %r" % (utime.time(), req, writer, e))
+            yield from self.handle_exc(req, writer, e)
 
         if close is not False:
             yield from writer.aclose()
         if __debug__ and self.debug > 1:
             self.log.debug("%.3f %s Finished processing request", utime.time(), req)
+
+    def handle_exc(self, req, resp, e):
+        # Can be overriden by subclasses. req may be not (fully) initialized.
+        # resp may already have (partial) content written.
+        # NOTE: It's your responsibility to not throw exceptions out of
+        # handle_exc(). If exception is thrown, it will be propagated, and
+        # your webapp will terminate.
+        # This method is a coroutine.
+        if 0: yield
 
     def mount(self, url, app):
         "Mount a sub-app at the url of current app."
