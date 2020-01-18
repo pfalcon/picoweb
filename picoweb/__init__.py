@@ -1,5 +1,5 @@
-# Picoweb web pico-framework for Pycopy
-# Copyright (c) 2014-2019 Paul Sokolovsky
+# Picoweb web pico-framework for Pycopy, https://github.com/pfalcon/pycopy
+# Copyright (c) 2014-2020 Paul Sokolovsky
 # SPDX-License-Identifier: MIT
 import sys
 import gc
