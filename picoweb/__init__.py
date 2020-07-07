@@ -225,7 +225,8 @@ class WebApp:
         # handle_exc(). If exception is thrown, it will be propagated, and
         # your webapp will terminate.
         # This method is a coroutine.
-        if 0: yield
+        return
+        yield
 
     def mount(self, url, app):
         "Mount a sub-app at the url of current app."
