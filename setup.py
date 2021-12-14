@@ -16,4 +16,4 @@ for Pycopy (https://github.com/pfalcon/pycopy) and its uasyncio module.",
       # Note: no explicit dependency on 'utemplate', if a specific app uses
       # templates, it must depend on it. Likewise, don't depend on
       # pycopy-ulogging as application might not use logging.
-      install_requires=['pycopy-uasyncio', 'pycopy-pkg_resources'])
+      install_requires=['pycopy-uasyncio', 'pycopy-pkg_resources'],['micropython-ulogging'])
