@@ -167,8 +167,9 @@ class WebApp:
                 extra = {}
                 if len(e) > 2:
                     extra = e[2]
-
-                if path == pattern:
+                _methods = extra.get("methods",[method])
+                if (path == pattern) and \
+                   (method in _methods):
                     found = True
                     break
                 elif not isinstance(pattern, str):
